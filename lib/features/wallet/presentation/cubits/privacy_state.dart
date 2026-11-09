@@ -1,0 +1,15 @@
+import 'package:equatable/equatable.dart';
+
+/// Estado de privacidad del saldo (Reto 2). Es un estado de presentación:
+/// no vive en el dominio ni en el repositorio.
+class PrivacyState extends Equatable {
+  const PrivacyState({this.hidden = false});
+
+  final bool hidden;
+
+  PrivacyState copyWith({bool? hidden}) =>
+      PrivacyState(hidden: hidden ?? this.hidden);
+
+  @override
+  List<Object?> get props => [hidden];
+}
