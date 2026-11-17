@@ -60,6 +60,14 @@ void main() {
 
     expect(find.text('S/ 1,274.60'), findsOneWidget);
     expect(find.text('Últimos movimientos'), findsOneWidget);
+
+    // El primer movimiento queda bajo el viewport por la cabecera de identidad;
+    // lo traemos a la vista antes de comprobarlo.
+    await tester.scrollUntilVisible(
+      find.text('Sueldo de prácticas'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Sueldo de prácticas'), findsOneWidget);
   });
 

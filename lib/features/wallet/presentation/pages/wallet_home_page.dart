@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wallet_unsaac/core/config/app_profile.dart';
 import 'package:wallet_unsaac/core/config/firebase_status.dart';
 import 'package:wallet_unsaac/core/theme/theme_cubit.dart';
 import 'package:wallet_unsaac/core/theme/theme_state.dart';
@@ -10,8 +11,10 @@ import 'package:wallet_unsaac/features/wallet/presentation/cubits/privacy_cubit.
 import 'package:wallet_unsaac/features/wallet/presentation/cubits/privacy_state.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/widgets/balance_card.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/widgets/firebase_status_card.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/widgets/identity_header.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/widgets/movement_tile.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/widgets/seed_color_selector.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/widgets/unsaac_logo.dart';
 
 /// Pantalla principal de Wallet UNSAAC (Sesión 1 + cuatro retos).
 ///
@@ -25,20 +28,16 @@ class WalletHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 20,
         title: Row(
           children: [
-            Icon(
-              Icons.account_balance_wallet_rounded,
-              color: theme.colorScheme.primary,
-            ),
-            const SizedBox(width: 8),
-            const Text(
-              'Wallet UNSAAC',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+            const UnsaacLogo(size: 32),
+            const SizedBox(width: 10),
+            Text(
+              AppProfile.appName,
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
             ),
           ],
         ),
@@ -125,13 +124,8 @@ class _SummaryView extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
             children: [
-              Text(
-                'Hola, estudiante UNSAAC',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 4),
+              const IdentityHeader(),
+              const SizedBox(height: 16),
               Text(
                 'Este es el resumen de tus finanzas en noviembre de 2026.',
                 style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
@@ -194,15 +188,8 @@ class _SummaryView extends StatelessWidget {
               const SeedColorSelector(),
               const SizedBox(height: 20),
               FirebaseStatusCard(status: firebaseStatus),
-              const SizedBox(height: 16),
-              Center(
-                child: Text(
-                  'Datos de demostración · Wallet UNSAAC 1.0.0',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
+              const SizedBox(height: 20),
+              const _AcademicFooter(),
             ],
           ),
         );
@@ -249,6 +236,35 @@ class _ErrorView extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Pie con el contexto académico del proyecto (curso, docente y versión).
+class _AcademicFooter extends StatelessWidget {
+  const _AcademicFooter();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    return Column(
+      children: [
+        const UnsaacLogo(size: 36),
+        const SizedBox(height: 8),
+        Text(AppProfile.courseLine, style: style, textAlign: TextAlign.center),
+        Text('Docente: ${AppProfile.teacher}',
+            style: style, textAlign: TextAlign.center),
+        Text(AppProfile.unit, style: style, textAlign: TextAlign.center),
+        const SizedBox(height: 4),
+        Text(
+          'Datos de demostración · ${AppProfile.appName} ${AppProfile.appVersion}',
+          style: style?.copyWith(fontWeight: FontWeight.w600),
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }

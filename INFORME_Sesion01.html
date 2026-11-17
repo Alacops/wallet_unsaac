@@ -1,0 +1,338 @@
+<title>Informe Sesión 1 — Wallet UNSAAC</title>
+<style>
+  :root {
+    --granate: #7A1F2B;
+    --granate-dark: #5E161F;
+    --oro: #C8A24B;
+    --tinta: #1E1E22;
+    --gris: #55555E;
+    --linea: #E3DEDE;
+    --fondo-slot: #FBF7F4;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", "Calibri", "Helvetica Neue", Arial, sans-serif;
+    color: var(--tinta);
+    line-height: 1.55;
+    font-size: 11.2pt;
+    background: #f4f1ef;
+  }
+  .hoja {
+    background: #fff;
+    width: 210mm;
+    min-height: 297mm;
+    margin: 12px auto;
+    padding: 22mm 20mm;
+    box-shadow: 0 2px 14px rgba(0,0,0,.12);
+  }
+  h1, h2, h3 { color: var(--granate-dark); line-height: 1.25; }
+  h2 {
+    font-size: 15pt;
+    border-bottom: 2px solid var(--granate);
+    padding-bottom: 4px;
+    margin: 26px 0 12px;
+  }
+  h3 { font-size: 12.3pt; margin: 18px 0 6px; }
+  p { margin: 7px 0; text-align: justify; }
+  a { color: var(--granate); }
+  code {
+    font-family: "Cascadia Code", "Consolas", monospace;
+    background: #f3eef0;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: .92em;
+    color: var(--granate-dark);
+  }
+  pre {
+    background: #2b2127;
+    color: #f4ede8;
+    padding: 12px 14px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: .86em;
+    line-height: 1.45;
+    font-family: "Cascadia Code", "Consolas", monospace;
+  }
+  pre .cmt { color: #c99; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .95em; }
+  th, td { border: 1px solid var(--linea); padding: 7px 9px; text-align: left; vertical-align: top; }
+  th { background: var(--granate); color: #fff; font-weight: 600; }
+  tr:nth-child(even) td { background: #faf7f8; }
+
+  /* ---- Carátula (formato primera unidad) ---- */
+  .caratula { text-align: center; min-height: 253mm; display: flex; flex-direction: column; }
+  .caratula .u { font-size: 13pt; font-weight: 700; margin-top: 8mm; letter-spacing: .3px; }
+  .caratula .fac { font-size: 11.5pt; font-weight: 700; margin-top: 10mm; padding: 0 6%; line-height: 1.3; }
+  .caratula .esc { font-size: 10.5pt; font-weight: 700; margin-top: 4mm; }
+  .caratula .logos { display: flex; justify-content: center; align-items: center; gap: 48px; margin: 12mm 0; }
+  .caratula .logos img.escudo { height: 185px; width: auto; }
+  .caratula .logos img.epiis { height: 160px; width: auto; }
+  .caratula .rule { border: none; border-top: 2.5px solid #000; width: 78%; margin: 0 auto; }
+  .caratula .tit { font-size: 17pt; font-weight: 800; color: #000; margin: 9px 0 5px; letter-spacing: .4px; }
+  .caratula .tit-sub { font-size: 11.5pt; font-style: italic; font-weight: 700; color: #000; margin-bottom: 9px; }
+  .caratula .datos { margin-top: 14mm; }
+  .caratula .datos .lab { font-size: 12.5pt; font-weight: 800; color: #000; margin-top: 11px; }
+  .caratula .datos .val { font-size: 11.5pt; color: #000; }
+  .caratula .lugar { margin-top: auto; padding-top: 12mm; font-size: 12.5pt; font-weight: 800; color: #000; }
+
+  /* ---- Slots de captura ---- */
+  .captura {
+    margin: 14px 0 20px;
+    border: 1px solid var(--linea);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--fondo-slot);
+  }
+  .captura .barra {
+    background: var(--granate);
+    color: #fff;
+    font-size: 9.6pt;
+    font-weight: 600;
+    padding: 5px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .captura .barra .tag { background: rgba(255,255,255,.18); padding: 1px 8px; border-radius: 20px; font-size: 8.8pt; }
+  .captura .marco { padding: 8px; text-align: center; }
+  .captura img { display: block; width: 100%; max-width: 100%; height: auto; border-radius: 6px; border: 1px solid #ddd; }
+  .captura .pie-cap { font-size: 9.2pt; color: var(--gris); padding: 0 12px 9px; text-align: center; }
+
+  .reto { border-left: 4px solid var(--oro); padding-left: 14px; margin: 20px 0; }
+  .nota { background: #faf6ee; border: 1px solid #ecd9a8; border-radius: 8px; padding: 10px 14px; font-size: .95em; margin: 12px 0; }
+  .nota b { color: var(--granate-dark); }
+  ul, ol { margin: 7px 0 7px 4px; padding-left: 22px; }
+  li { margin: 3px 0; }
+  .chip { display:inline-block; background:#f3eef0; color:var(--granate-dark); border:1px solid var(--linea); border-radius:20px; padding:1px 10px; font-size:9pt; margin:1px 2px; }
+
+  @media print {
+    body { background: #fff; font-size: 10.6pt; }
+    .hoja { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 14mm 15mm; }
+    .salto { page-break-before: always; }
+    .captura, .reto, table, pre, figure { page-break-inside: avoid; }
+    h2 { page-break-after: avoid; }
+    a { color: var(--tinta); text-decoration: none; }
+    .caratula { min-height: 263mm; }
+  }
+</style>
+
+<!-- ============================ CARÁTULA ============================ -->
+<section class="hoja caratula">
+  <div class="u">UNIVERSIDAD NACIONAL DE SAN ANTONIO ABAD DEL CUSCO</div>
+  <div class="fac">FACULTAD DE INGENIERÍA ELÉCTRICA, ELECTRÓNICA, INFORMÁTICA Y MECÁNICA</div>
+  <div class="esc">ESCUELA PROFESIONAL DE INGENIERÍA INFORMÁTICA Y DE SISTEMAS</div>
+
+  <div class="logos">
+    <img class="escudo" src="__ESCUDO__" alt="Escudo UNSAAC">
+    <img class="epiis" src="__EPIIS__" alt="Logo EPIIS">
+  </div>
+
+  <hr class="rule">
+  <div class="tit">INFORME DE PRÁCTICA — SESIÓN 1</div>
+  <div class="tit-sub">Wallet UNSAAC: arquitectura por capas, patrón BLoC y los cuatro retos</div>
+  <hr class="rule">
+
+  <div class="datos">
+    <div class="lab">ASIGNATURA:</div>
+    <div class="val">DESARROLLO DE SOFTWARE II</div>
+    <div class="lab">DOCENTE:</div>
+    <div class="val">MTRO. ING. YOVER COLLANTES VALER</div>
+    <div class="lab">ALUMNO:</div>
+    <div class="val">Condori Contreras, Alain Armando - 021501</div>
+  </div>
+
+  <div class="lugar">Cusco – 2026</div>
+</section>
+
+<!-- ============================ CONTENIDO ============================ -->
+<section class="hoja">
+
+  <h2>1. Objetivos</h2>
+  <ul>
+    <li>Construir un aplicativo de finanzas personales (<b>Wallet UNSAAC</b>) aplicando <b>arquitectura por capas</b> (domain · data · presentation · core).</li>
+    <li>Gestionar el estado de la interfaz con el <b>patrón BLoC (Cubit)</b>, separando la lógica de la vista.</li>
+    <li>Implementar <b>tema Material 3</b> claro/oscuro con una conexión preparada para <b>Firebase</b>.</li>
+    <li>Resolver los <b>cuatro retos</b> de la guía: tema persistente, saldo privado, estados de carga/éxito/error y color semilla configurable.</li>
+    <li>Verificar el resultado con <b>pruebas automatizadas</b> y análisis estático sin observaciones.</li>
+  </ul>
+
+  <h2>2. Entorno y herramientas</h2>
+  <table>
+    <tr><th>Herramienta</th><th>Versión</th><th>Uso</th></tr>
+    <tr><td>Flutter</td><td>3.47.5 (stable)</td><td>Framework de interfaz y ejecución</td></tr>
+    <tr><td>Dart</td><td>3.13.4</td><td>Lenguaje (clases selladas, null-safety)</td></tr>
+    <tr><td>flutter_bloc</td><td>Cubit / BlocBuilder</td><td>Gestión de estado</td></tr>
+    <tr><td>shared_preferences</td><td>—</td><td>Persistencia del tema (Reto 1)</td></tr>
+    <tr><td>Git</td><td>2.54.0</td><td>Control de versiones</td></tr>
+  </table>
+
+  <h2>3. Arquitectura del proyecto</h2>
+  <p>El código separa responsabilidades en cuatro bloques. La regla de oro es que
+  <b>las dependencias apuntan hacia adentro</b>: la presentación conoce al dominio,
+  pero el dominio no sabe nada de Flutter ni de los Cubits.</p>
+
+  <pre>lib/
+├── main.dart            <span class="cmt"># arranque: binding → preferencias → Firebase → runApp</span>
+├── app.dart             <span class="cmt"># providers + MaterialApp (tema conectado al Cubit)</span>
+├── core/                <span class="cmt"># transversal: config, tema, utilidades, perfil</span>
+│   ├── config/          <span class="cmt"># app_profile, firebase_status, firebase_bootstrap</span>
+│   ├── theme/           <span class="cmt"># ThemeCubit, ThemePreferences, AppTheme</span>
+│   └── utils/           <span class="cmt"># formato de soles y fechas</span>
+└── features/wallet/
+    ├── domain/          <span class="cmt"># REGLAS: Movement, WalletSummary, WalletRepository</span>
+    ├── data/            <span class="cmt"># InMemoryWalletRepository (contrato implementado)</span>
+    └── presentation/    <span class="cmt"># Cubits, páginas y widgets (lo que se ve)</span></pre>
+
+  <h3>Arranque: <code>main.dart</code></h3>
+  <pre>Future&lt;void&gt; main() async {
+  WidgetsFlutterBinding.ensureInitialized();                 <span class="cmt">// enlaza Flutter con el SO</span>
+  final themePreferences = await ThemePreferences.create();  <span class="cmt">// lee tema guardado (Reto 1)</span>
+  final firebaseStatus   = await FirebaseBootstrap.initialize();
+  runApp(WalletApp(firebaseStatus: firebaseStatus,
+                   themePreferences: themePreferences));
+}</pre>
+  <p><code>main.dart</code> <b>orquesta el arranque</b>: no contiene lógica de negocio
+  ni de interfaz. Lee primero las preferencias de tema para que el primer frame use
+  el modo correcto (sin parpadeo), prepara Firebase con tolerancia a fallos y entrega
+  el control a <code>WalletApp</code>, que inyecta el repositorio y los tres Cubits.</p>
+
+  <table>
+    <tr><th>Capa</th><th>Responsabilidad</th><th>Restricción</th></tr>
+    <tr><td><b>domain</b></td><td>¿Qué es un movimiento? ¿Cómo se calcula el saldo?</td><td>No importa Flutter ni flutter_bloc</td></tr>
+    <tr><td><b>data</b></td><td>¿De dónde salen los datos?</td><td>No contiene reglas de negocio</td></tr>
+    <tr><td><b>presentation</b></td><td>¿Qué ve el usuario y cómo reacciona?</td><td>No calcula el saldo</td></tr>
+    <tr><td><b>core</b></td><td>Tema, formato, configuración, perfil</td><td>No depende de la billetera</td></tr>
+  </table>
+
+</section>
+
+<!-- ============================ LOS 4 RETOS ============================ -->
+<section class="hoja">
+  <h2 class="salto">4. Los cuatro retos</h2>
+  <p>Cada reto se resuelve como <b>un estado nuevo bien modelado</b>. La pantalla solo
+  escucha estados con <code>BlocBuilder</code>; nunca modifica datos a mano.</p>
+
+  <div class="reto">
+    <h3>Reto 1 — Tema persistente entre sesiones</h3>
+    <p><code>ThemePreferences</code> guarda el modo y el color con <code>shared_preferences</code>;
+    se leen <b>antes de</b> <code>runApp</code>. El botón recorre claro → oscuro → sistema → claro,
+    y un valor corrupto cae en <code>system</code> sin romper el arranque.</p>
+    <p><span class="chip">theme_preferences.dart</span><span class="chip">theme_cubit.dart</span><span class="chip">main.dart</span></p>
+  </div>
+
+  <div class="reto">
+    <h3>Reto 2 — Saldo privado</h3>
+    <p><code>PrivacyCubit</code> (estado inmutable con <code>Equatable</code>) oculta los importes.
+    Los widgets no deciden: reciben <code>hideBalance</code>/<code>hideAmount</code> y un callback.
+    La decisión vive en el Cubit.</p>
+    <p><span class="chip">privacy_cubit.dart</span><span class="chip">balance_card.dart</span><span class="chip">movement_tile.dart</span></p>
+  </div>
+
+  <div class="reto">
+    <h3>Reto 3 — Estados de carga / éxito / error</h3>
+    <p>Jerarquía sellada <code>BalanceInitial | BalanceLoading | BalanceSuccess | BalanceFailure</code>.
+    El compilador obliga a cubrir los cuatro casos. Ante un error se muestra el mensaje
+    y el botón <b>Reintentar</b>; <code>RefreshIndicator</code> permite recargar.</p>
+    <p><span class="chip">balance_cubit.dart</span><span class="chip">balance_state.dart</span><span class="chip">wallet_home_page.dart</span></p>
+  </div>
+
+  <div class="reto">
+    <h3>Reto 4 — Color semilla configurable</h3>
+    <p><code>seedColor</code> vive en <code>ThemeState</code>; <code>AppTheme</code> recalcula toda
+    la paleta Material 3 con <code>ColorScheme.fromSeed</code>. El cambio se aplica en caliente a
+    toda la app mediante <code>BlocBuilder&lt;ThemeCubit&gt;</code>.</p>
+    <p><span class="chip">theme_state.dart</span><span class="chip">app_theme.dart</span><span class="chip">seed_color_selector.dart</span></p>
+  </div>
+
+  <div class="nota"><b>Diagrama evento → estado (Reto 3):</b></div>
+  <pre>[ app arranca ]  BalanceCubit..load()
+      ▼
+emit(BalanceLoading())  ───────────────►  BlocBuilder → spinner
+      │  await repository.loadSummary()
+      ▼
+  ┌─ éxito ─► emit(BalanceSuccess(summary)) ─► saldo + lista
+  └─ error ─► emit(BalanceFailure(mensaje)) ─► error + "Reintentar"</pre>
+</section>
+
+<!-- ============================ DEMOSTRACIÓN / CAPTURAS ============================ -->
+<section class="hoja">
+  <h2 class="salto">5. Secuencia de demostración (capturas)</h2>
+  <p>Las siguientes capturas evidencian la ejecución de la app y la resolución de los
+  cuatro retos, en el orden en que se presentan al usuario.</p>
+
+  <div class="captura">
+    <div class="barra"><span>Captura 1 — Estado de carga</span><span class="tag">Reto 3</span></div>
+    <div class="marco"><img src="__CAP1__" alt="Estado de carga"></div>
+    <div class="pie-cap">Al arrancar, <code>BalanceCubit</code> emite <code>BalanceLoading</code> y la interfaz muestra el indicador de progreso.</div>
+  </div>
+
+  <div class="captura">
+    <div class="barra"><span>Captura 2 — Pantalla principal (saldo visible)</span><span class="tag">Base · Reto 3 éxito</span></div>
+    <div class="marco"><img src="__CAP2__" alt="Pantalla principal"></div>
+    <div class="pie-cap">Estado <code>BalanceSuccess</code>: cabecera personalizada, tarjeta de saldo y movimientos.</div>
+  </div>
+
+  <div class="captura">
+    <div class="barra"><span>Captura 3 — Saldo oculto</span><span class="tag">Reto 2</span></div>
+    <div class="marco"><img src="__CAP3__" alt="Saldo oculto"></div>
+    <div class="pie-cap">Al tocar el ojo, <code>PrivacyCubit</code> enmascara el saldo y los importes de la lista.</div>
+  </div>
+
+  <div class="captura">
+    <div class="barra"><span>Captura 4 — Tema oscuro</span><span class="tag">Reto 1</span></div>
+    <div class="marco"><img src="__CAP4__" alt="Tema oscuro"></div>
+    <div class="pie-cap">El modo elegido se guarda con <code>shared_preferences</code> y se mantiene entre sesiones.</div>
+  </div>
+
+  <div class="captura">
+    <div class="barra"><span>Captura 5 — Color semilla</span><span class="tag">Reto 4</span></div>
+    <div class="marco"><img src="__CAP5__" alt="Color semilla"></div>
+    <div class="pie-cap">Al elegir otro color semilla, <code>ColorScheme.fromSeed</code> recalcula toda la paleta en caliente.</div>
+  </div>
+
+  <div class="captura">
+    <div class="barra"><span>Captura 6 — Estado de error y Reintentar</span><span class="tag">Reto 3</span></div>
+    <div class="marco"><img src="__CAP6__" alt="Error y reintentar"></div>
+    <div class="pie-cap">Si <code>loadSummary</code> falla, se emite <code>BalanceFailure</code> con mensaje y acción de reintento.</div>
+  </div>
+</section>
+
+<!-- ============================ PRUEBAS ============================ -->
+<section class="hoja">
+  <h2 class="salto">6. Pruebas automatizadas</h2>
+  <p>El proyecto incluye <b>22 pruebas</b> (Cubits y widgets) y pasa el análisis estático
+  sin observaciones.</p>
+  <pre><span class="cmt">$</span> flutter analyze
+  No issues found!
+
+<span class="cmt">$</span> flutter test
+  All tests passed!   <span class="cmt">(22 pruebas)</span></pre>
+
+  <table>
+    <tr><th>Archivo de prueba</th><th>Qué verifica</th><th>Reto</th></tr>
+    <tr><td>theme_persistence_test.dart</td><td>Guardar/recuperar tema, ciclo de modos, valor corrupto → sistema</td><td>1</td></tr>
+    <tr><td>privacy_test.dart</td><td><code>PrivacyCubit.toggle</code> y enmascarado del importe</td><td>2</td></tr>
+    <tr><td>balance_test.dart</td><td><code>bloc_test</code>: Loading→Success, Loading→Failure, reintento</td><td>3</td></tr>
+    <tr><td>seed_color_test.dart</td><td>El <code>primary</code> coincide con <code>ColorScheme.fromSeed</code></td><td>4</td></tr>
+    <tr><td>wallet_home_page_test.dart</td><td>Vistas de éxito, error y botón de ojo (integración)</td><td>2·3</td></tr>
+  </table>
+
+  <div class="captura">
+    <div class="barra"><span>Captura 7 — Resultado de flutter test</span><span class="tag">Evidencia</span></div>
+    <div class="marco"><img src="__CAP7__" alt="Resultado de flutter test"></div>
+    <div class="pie-cap">Salida de la terminal con las 22 pruebas en verde: <code>All tests passed!</code></div>
+  </div>
+
+  <h2>7. Conclusiones</h2>
+  <ul>
+    <li>La <b>separación por capas</b> deja las reglas de negocio aisladas de Flutter, lo que facilita las pruebas y el cambio de origen de datos (hoy en memoria, mañana Firebase).</li>
+    <li>El <b>patrón BLoC</b> impone una frontera limpia: los widgets solo escuchan estados, de modo que cada reto se modela como un estado nuevo y no como código disperso.</li>
+    <li>Las <b>clases selladas</b> del estado del saldo obligan a cubrir todos los casos (carga, éxito, error), evitando olvidos en la interfaz.</li>
+    <li>Los <b>cuatro retos</b> quedan integrados y verificados con 22 pruebas y análisis estático sin observaciones.</li>
+  </ul>
+
+  <h2>8. Repositorio</h2>
+  <p>Código fuente y documentación (<code>README.md</code> y <code>ARQUITECTURA.md</code>):</p>
+  <p><b>URL del repositorio:</b> _______________________________________________</p>
+</section>
