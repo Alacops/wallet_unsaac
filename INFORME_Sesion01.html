@@ -14,8 +14,8 @@
   body {
     font-family: "Segoe UI", "Calibri", "Helvetica Neue", Arial, sans-serif;
     color: var(--tinta);
-    line-height: 1.55;
-    font-size: 11.2pt;
+    line-height: 1.5;
+    font-size: 11pt;
     background: #f4f1ef;
   }
   .hoja {
@@ -26,39 +26,41 @@
     padding: 22mm 20mm;
     box-shadow: 0 2px 14px rgba(0,0,0,.12);
   }
-  h1, h2, h3 { color: var(--granate-dark); line-height: 1.25; }
+  h1, h2, h3, h4 { color: var(--granate-dark); line-height: 1.25; }
   h2 {
-    font-size: 15pt;
+    font-size: 14.5pt;
     border-bottom: 2px solid var(--granate);
     padding-bottom: 4px;
-    margin: 26px 0 12px;
+    margin: 22px 0 10px;
   }
-  h3 { font-size: 12.3pt; margin: 18px 0 6px; }
-  p { margin: 7px 0; text-align: justify; }
+  h3 { font-size: 12pt; margin: 15px 0 5px; }
+  h4 { font-size: 10.8pt; margin: 12px 0 4px; color: var(--granate); }
+  p { margin: 6px 0; text-align: justify; }
   a { color: var(--granate); }
   code {
     font-family: "Cascadia Code", "Consolas", monospace;
     background: #f3eef0;
     padding: 1px 5px;
     border-radius: 4px;
-    font-size: .92em;
+    font-size: .9em;
     color: var(--granate-dark);
   }
   pre {
     background: #2b2127;
     color: #f4ede8;
-    padding: 12px 14px;
+    padding: 11px 13px;
     border-radius: 8px;
     overflow-x: auto;
-    font-size: .86em;
-    line-height: 1.45;
+    font-size: .82em;
+    line-height: 1.42;
     font-family: "Cascadia Code", "Consolas", monospace;
   }
   pre .cmt { color: #c99; }
-  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .95em; }
-  th, td { border: 1px solid var(--linea); padding: 7px 9px; text-align: left; vertical-align: top; }
+  table { border-collapse: collapse; width: 100%; margin: 9px 0; font-size: .92em; }
+  th, td { border: 1px solid var(--linea); padding: 6px 9px; text-align: left; vertical-align: top; }
   th { background: var(--granate); color: #fff; font-weight: 600; }
   tr:nth-child(even) td { background: #faf7f8; }
+  td .ok { color: #1a7a33; font-weight: 700; }
 
   /* ---- Carátula (formato primera unidad) ---- */
   .caratula { text-align: center; height: 238mm; display: flex; flex-direction: column; page-break-after: always; }
@@ -78,7 +80,7 @@
 
   /* ---- Slots de captura ---- */
   .captura {
-    margin: 14px 0 20px;
+    margin: 12px 0 16px;
     border: 1px solid var(--linea);
     border-radius: 10px;
     overflow: hidden;
@@ -87,33 +89,37 @@
   .captura .barra {
     background: var(--granate);
     color: #fff;
-    font-size: 9.6pt;
+    font-size: 9.4pt;
     font-weight: 600;
     padding: 5px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  .captura .barra .tag { background: rgba(255,255,255,.18); padding: 1px 8px; border-radius: 20px; font-size: 8.8pt; }
+  .captura .barra .tag { background: rgba(255,255,255,.18); padding: 1px 8px; border-radius: 20px; font-size: 8.6pt; }
   .captura .marco { padding: 8px; text-align: center; }
   .captura img { display: block; width: 100%; max-width: 100%; height: auto; border-radius: 6px; border: 1px solid #ddd; }
-  .captura .pie-cap { font-size: 9.2pt; color: var(--gris); padding: 0 12px 9px; text-align: center; }
+  .captura .pie-cap { font-size: 9pt; color: var(--gris); padding: 0 12px 9px; text-align: center; }
+  .captura .pie-cap b { color: var(--granate-dark); }
 
-  .reto { border-left: 4px solid var(--oro); padding-left: 14px; margin: 20px 0; }
-  .nota { background: #faf6ee; border: 1px solid #ecd9a8; border-radius: 8px; padding: 10px 14px; font-size: .95em; margin: 12px 0; }
+  .resumen { background: #faf7f8; border: 1px solid var(--linea); border-left: 4px solid var(--granate); border-radius: 6px; padding: 12px 16px; }
+  .kw { font-size: .92em; color: var(--gris); margin-top: 8px; }
+  .nota { background: #faf6ee; border: 1px solid #ecd9a8; border-radius: 8px; padding: 9px 13px; font-size: .92em; margin: 10px 0; }
   .nota b { color: var(--granate-dark); }
-  ul, ol { margin: 7px 0 7px 4px; padding-left: 22px; }
+  ul, ol { margin: 6px 0 6px 2px; padding-left: 22px; }
   li { margin: 3px 0; }
-  .chip { display:inline-block; background:#f3eef0; color:var(--granate-dark); border:1px solid var(--linea); border-radius:20px; padding:1px 10px; font-size:9pt; margin:1px 2px; }
+  .firma { margin-top: 22px; font-size: 1.02em; }
+  .ref p { text-indent: -22px; padding-left: 22px; }
 
   @media print {
-    @page { margin: 16mm; }
-    body { background: #fff; font-size: 10.6pt; }
+    @page { margin: 15mm; }
+    body { background: #fff; font-size: 10.3pt; }
     .hoja { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 0; }
-    .captura, .reto, table, pre { page-break-inside: avoid; }
-    h2, h3 { page-break-after: avoid; }
+    .captura, table, pre, .firma { page-break-inside: avoid; }
+    h2, h3, h4 { page-break-after: avoid; }
     a { color: var(--tinta); text-decoration: none; }
     .caratula { height: 238mm; }
+    .reto-sec { page-break-before: always; }
   }
 </style>
 
@@ -129,13 +135,13 @@
   </div>
 
   <hr class="rule">
-  <div class="tit">INFORME DE PRÁCTICA — SESIÓN 1</div>
-  <div class="tit-sub">Wallet UNSAAC: arquitectura por capas, patrón BLoC y los cuatro retos</div>
+  <div class="tit">INFORME DE LOS CUATRO RETOS — SESIÓN 1</div>
+  <div class="tit-sub">Wallet UNSAAC — Desarrollo de Software II</div>
   <hr class="rule">
 
   <div class="datos">
     <div class="lab">ASIGNATURA:</div>
-    <div class="val">DESARROLLO DE SOFTWARE II</div>
+    <div class="val">DESARROLLO DE SOFTWARE II (IF616BIN)</div>
     <div class="lab">DOCENTE:</div>
     <div class="val">MTRO. ING. YOVER COLLANTES VALER</div>
     <div class="lab">ALUMNO:</div>
@@ -148,179 +154,459 @@
 <!-- ============================ CONTENIDO ============================ -->
 <section class="hoja">
 
-  <h2>1. Objetivos</h2>
-  <ul>
-    <li>Construir un aplicativo de finanzas personales (<b>Wallet UNSAAC</b>) aplicando <b>arquitectura por capas</b> (domain · data · presentation · core).</li>
-    <li>Gestionar el estado de la interfaz con el <b>patrón BLoC (Cubit)</b>, separando la lógica de la vista.</li>
-    <li>Implementar <b>tema Material 3</b> claro/oscuro con una conexión preparada para <b>Firebase</b>.</li>
-    <li>Resolver los <b>cuatro retos</b> de la guía: tema persistente, saldo privado, estados de carga/éxito/error y color semilla configurable.</li>
-    <li>Verificar el resultado con <b>pruebas automatizadas</b> y análisis estático sin observaciones.</li>
-  </ul>
-
-  <h2>2. Entorno y herramientas</h2>
+  <!-- ===== 1. DATOS GENERALES ===== -->
+  <h2>1. Datos generales</h2>
   <table>
-    <tr><th>Herramienta</th><th>Versión</th><th>Uso</th></tr>
-    <tr><td>Flutter</td><td>3.47.5 (stable)</td><td>Framework de interfaz y ejecución</td></tr>
-    <tr><td>Dart</td><td>3.13.4</td><td>Lenguaje (clases selladas, null-safety)</td></tr>
-    <tr><td>flutter_bloc</td><td>Cubit / BlocBuilder</td><td>Gestión de estado</td></tr>
-    <tr><td>shared_preferences</td><td>—</td><td>Persistencia del tema (Reto 1)</td></tr>
-    <tr><td>Git</td><td>2.54.0</td><td>Control de versiones</td></tr>
+    <tr><th style="width:38%">Campo</th><th>Información</th></tr>
+    <tr><td>Nombre y apellidos</td><td>Condori Contreras, Alain Armando</td></tr>
+    <tr><td>Código de estudiante</td><td>021501</td></tr>
+    <tr><td>Escuela profesional</td><td>Ingeniería Informática y de Sistemas</td></tr>
+    <tr><td>Asignatura</td><td>Desarrollo de Software II (IF616BIN)</td></tr>
+    <tr><td>Unidad / sesión</td><td>Unidad II — Sesión 1 · 9 de noviembre de 2026</td></tr>
+    <tr><td>Docente</td><td>Mtro. Ing. Yover Collantes Valer</td></tr>
+    <tr><td>Repositorio</td><td><a href="https://github.com/Alacops/wallet_unsaac">https://github.com/Alacops/wallet_unsaac</a></td></tr>
+    <tr><td>Etiqueta o commit</td><td><code>sesion-01-retos</code></td></tr>
+    <tr><td>Fecha de entrega</td><td>17/11/2026</td></tr>
+    <tr><td>Retos entregados</td><td>&#9745; Reto 1 · &#9745; Reto 2 · &#9745; Reto 3 · &#9745; Reto 4</td></tr>
   </table>
 
-  <h2>3. Arquitectura del proyecto</h2>
-  <p>El código separa responsabilidades en cuatro bloques. La regla de oro es que
-  <b>las dependencias apuntan hacia adentro</b>: la presentación conoce al dominio,
-  pero el dominio no sabe nada de Flutter ni de los Cubits.</p>
+  <!-- ===== 2. RESUMEN ===== -->
+  <h2>2. Resumen del trabajo</h2>
+  <div class="resumen">
+    <p>Se construyó <b>Wallet UNSAAC</b>, una aplicación Flutter de finanzas personales
+    organizada en <b>arquitectura por capas</b> (domain · data · presentation · core) y con
+    gestión de estado mediante el <b>patrón BLoC (Cubit)</b>. Sobre esa base se resolvieron
+    los cuatro retos de la sesión. El <b>Reto 1</b> hace persistente el tema entre sesiones
+    guardándolo con <code>shared_preferences</code> y leyéndolo antes de <code>runApp</code>;
+    un valor corrupto cae en <code>system</code> sin romper el arranque. El <b>Reto 2</b> añade
+    un <code>PrivacyCubit</code> que oculta los importes como estado de presentación, sin tocar
+    los datos. El <b>Reto 3</b> modela el saldo con una <b>jerarquía sellada</b>
+    (<code>BalanceInitial/Loading/Success/Failure</code>) que obliga a cubrir carga, éxito y
+    error, con mensaje y botón de reintento. El <b>Reto 4</b> parametriza el color semilla y
+    recalcula toda la paleta Material 3 con <code>ColorScheme.fromSeed</code>. Todo se verificó
+    con <b>22 pruebas automatizadas</b> en verde y <code>flutter analyze</code> sin
+    observaciones. La decisión técnica que más destaca es modelar cada reto como un estado
+    tipado, de modo que la interfaz solo escucha estados y nunca manipula datos a mano.</p>
+    <p class="kw"><b>Palabras clave:</b> Flutter; patrón BLoC; arquitectura por capas; gestión de estado; pruebas automatizadas.</p>
+  </div>
 
+  <!-- ===== 3. ENTORNO ===== -->
+  <h2>3. Entorno y verificaciones</h2>
+
+  <h3>3.1. Versiones utilizadas</h3>
+  <table>
+    <tr><th>Herramienta</th><th>Versión</th><th>Cómo la verificó</th></tr>
+    <tr><td>Flutter</td><td>3.47.5 (stable, rev 6a19cca564)</td><td><code>flutter --version</code></td></tr>
+    <tr><td>Dart</td><td>3.13.4</td><td><code>flutter --version</code> / <code>dart --version</code></td></tr>
+    <tr><td>Android SDK / emulador</td><td>No usado — ejecución en Chrome (Flutter web)</td><td><code>flutter devices</code></td></tr>
+    <tr><td>Firebase</td><td>Conexión preparada (<code>FirebaseBootstrap</code>); sin proyecto productivo</td><td><code>lib/core/config/firebase_status.dart</code></td></tr>
+    <tr><td>Sistema operativo</td><td>Windows 11 Pro</td><td><code>winver</code></td></tr>
+  </table>
+
+  <h3>3.2. Comandos ejecutados</h3>
+  <table>
+    <tr><th>Comando</th><th>Resultado</th><th>Evidencia</th></tr>
+    <tr><td><code>flutter pub get</code></td><td>Got dependencies!</td><td>Terminal</td></tr>
+    <tr><td><code>flutter analyze</code></td><td class="ok">No issues found!</td><td>Terminal</td></tr>
+    <tr><td><code>flutter test</code></td><td class="ok">All tests passed! (22 pruebas)</td><td>Figura de pruebas</td></tr>
+    <tr><td><code>flutter run -d chrome</code></td><td>Ejecuta en Chrome (web)</td><td>Figuras 1–8</td></tr>
+  </table>
+  <div class="captura">
+    <div class="barra"><span>Evidencia — Salida de flutter test</span><span class="tag">Pruebas</span></div>
+    <div class="marco"><img src="__CAP7__" alt="Resultado de flutter test"></div>
+    <div class="pie-cap">Terminal con las 22 pruebas en verde: <code>All tests passed!</code></div>
+  </div>
+
+  <h3>3.3. Estructura del repositorio</h3>
+  <p>El código separa responsabilidades por capas; <b>las dependencias apuntan hacia adentro</b>:
+  la presentación conoce al dominio, pero el dominio no sabe nada de Flutter ni de los Cubits.</p>
   <pre>lib/
 ├── main.dart            <span class="cmt"># arranque: binding → preferencias → Firebase → runApp</span>
 ├── app.dart             <span class="cmt"># providers + MaterialApp (tema conectado al Cubit)</span>
-├── core/                <span class="cmt"># transversal: config, tema, utilidades, perfil</span>
+├── core/                <span class="cmt"># transversal: config, tema, utilidades</span>
 │   ├── config/          <span class="cmt"># app_profile, firebase_status, firebase_bootstrap</span>
-│   ├── theme/           <span class="cmt"># ThemeCubit, ThemePreferences, AppTheme</span>
+│   ├── theme/           <span class="cmt"># ThemeCubit, ThemePreferences, AppTheme (Retos 1 y 4)</span>
 │   └── utils/           <span class="cmt"># formato de soles y fechas</span>
 └── features/wallet/
     ├── domain/          <span class="cmt"># REGLAS: Movement, WalletSummary, WalletRepository</span>
     ├── data/            <span class="cmt"># InMemoryWalletRepository (contrato implementado)</span>
-    └── presentation/    <span class="cmt"># Cubits, páginas y widgets (lo que se ve)</span></pre>
-
-  <h3>Arranque: <code>main.dart</code></h3>
-  <pre>Future&lt;void&gt; main() async {
-  WidgetsFlutterBinding.ensureInitialized();                 <span class="cmt">// enlaza Flutter con el SO</span>
-  final themePreferences = await ThemePreferences.create();  <span class="cmt">// lee tema guardado (Reto 1)</span>
-  final firebaseStatus   = await FirebaseBootstrap.initialize();
-  runApp(WalletApp(firebaseStatus: firebaseStatus,
-                   themePreferences: themePreferences));
-}</pre>
-  <p><code>main.dart</code> <b>orquesta el arranque</b>: no contiene lógica de negocio
-  ni de interfaz. Lee primero las preferencias de tema para que el primer frame use
-  el modo correcto (sin parpadeo), prepara Firebase con tolerancia a fallos y entrega
-  el control a <code>WalletApp</code>, que inyecta el repositorio y los tres Cubits.</p>
-
+    └── presentation/    <span class="cmt"># Cubits, páginas y widgets (Retos 2 y 3)</span></pre>
   <table>
     <tr><th>Capa</th><th>Responsabilidad</th><th>Restricción</th></tr>
     <tr><td><b>domain</b></td><td>¿Qué es un movimiento? ¿Cómo se calcula el saldo?</td><td>No importa Flutter ni flutter_bloc</td></tr>
     <tr><td><b>data</b></td><td>¿De dónde salen los datos?</td><td>No contiene reglas de negocio</td></tr>
     <tr><td><b>presentation</b></td><td>¿Qué ve el usuario y cómo reacciona?</td><td>No calcula el saldo</td></tr>
-    <tr><td><b>core</b></td><td>Tema, formato, configuración, perfil</td><td>No depende de la billetera</td></tr>
+    <tr><td><b>core</b></td><td>Tema, formato, configuración</td><td>No depende de la billetera</td></tr>
   </table>
 
-  <h2>4. Los cuatro retos</h2>
-  <p>Cada reto se resuelve como <b>un estado nuevo bien modelado</b>. La pantalla solo
-  escucha estados con <code>BlocBuilder</code>; nunca modifica datos a mano.</p>
+  <!-- ===== 4. RETO 1 ===== -->
+  <div class="reto-sec">
+  <h2>4. Reto 1 — Tema persistente entre sesiones</h2>
 
-  <div class="reto">
-    <h3>Reto 1 — Tema persistente entre sesiones</h3>
-    <p><code>ThemePreferences</code> guarda el modo y el color con <code>shared_preferences</code>;
-    se leen <b>antes de</b> <code>runApp</code>. El botón recorre claro → oscuro → sistema → claro,
-    y un valor corrupto cae en <code>system</code> sin romper el arranque.</p>
-    <p><span class="chip">theme_preferences.dart</span><span class="chip">theme_cubit.dart</span><span class="chip">main.dart</span></p>
-  </div>
+  <h3>4.1. Objetivo y alcance</h3>
+  <p>Lograr que el modo de tema elegido (claro / oscuro / sistema) sobreviva al cierre completo
+  de la app. Queda fuera del alcance la sincronización del tema en la nube entre dispositivos.</p>
 
-  <div class="reto">
-    <h3>Reto 2 — Saldo privado</h3>
-    <p><code>PrivacyCubit</code> (estado inmutable con <code>Equatable</code>) oculta los importes.
-    Los widgets no deciden: reciben <code>hideBalance</code>/<code>hideAmount</code> y un callback.
-    La decisión vive en el Cubit.</p>
-    <p><span class="chip">privacy_cubit.dart</span><span class="chip">balance_card.dart</span><span class="chip">movement_tile.dart</span></p>
-  </div>
-
-  <div class="reto">
-    <h3>Reto 3 — Estados de carga / éxito / error</h3>
-    <p>Jerarquía sellada <code>BalanceInitial | BalanceLoading | BalanceSuccess | BalanceFailure</code>.
-    El compilador obliga a cubrir los cuatro casos. Ante un error se muestra el mensaje
-    y el botón <b>Reintentar</b>; <code>RefreshIndicator</code> permite recargar.</p>
-    <p><span class="chip">balance_cubit.dart</span><span class="chip">balance_state.dart</span><span class="chip">wallet_home_page.dart</span></p>
-  </div>
-
-  <div class="reto">
-    <h3>Reto 4 — Color semilla configurable</h3>
-    <p><code>seedColor</code> vive en <code>ThemeState</code>; <code>AppTheme</code> recalcula toda
-    la paleta Material 3 con <code>ColorScheme.fromSeed</code>. El cambio se aplica en caliente a
-    toda la app mediante <code>BlocBuilder&lt;ThemeCubit&gt;</code>.</p>
-    <p><span class="chip">theme_state.dart</span><span class="chip">app_theme.dart</span><span class="chip">seed_color_selector.dart</span></p>
-  </div>
-
-  <div class="nota"><b>Diagrama evento → estado (Reto 3):</b></div>
-  <pre>[ app arranca ]  BalanceCubit..load()
-      ▼
-emit(BalanceLoading())  ───────────────►  BlocBuilder → spinner
-      │  await repository.loadSummary()
-      ▼
-  ┌─ éxito ─► emit(BalanceSuccess(summary)) ─► saldo + lista
-  └─ error ─► emit(BalanceFailure(mensaje)) ─► error + "Reintentar"</pre>
-  <h2>5. Secuencia de demostración (capturas)</h2>
-  <p>Las siguientes capturas evidencian la ejecución de la app y la resolución de los
-  cuatro retos, en el orden en que se presentan al usuario.</p>
-
-  <div class="captura">
-    <div class="barra"><span>Captura 1 — Estado de carga</span><span class="tag">Reto 3</span></div>
-    <div class="marco"><img src="__CAP1__" alt="Estado de carga"></div>
-    <div class="pie-cap">Al arrancar, <code>BalanceCubit</code> emite <code>BalanceLoading</code> y la interfaz muestra el indicador de progreso.</div>
-  </div>
-
-  <div class="captura">
-    <div class="barra"><span>Captura 2 — Pantalla principal (saldo visible)</span><span class="tag">Base · Reto 3 éxito</span></div>
-    <div class="marco"><img src="__CAP2__" alt="Pantalla principal"></div>
-    <div class="pie-cap">Estado <code>BalanceSuccess</code>: cabecera personalizada, tarjeta de saldo y movimientos.</div>
-  </div>
-
-  <div class="captura">
-    <div class="barra"><span>Captura 3 — Saldo oculto</span><span class="tag">Reto 2</span></div>
-    <div class="marco"><img src="__CAP3__" alt="Saldo oculto"></div>
-    <div class="pie-cap">Al tocar el ojo, <code>PrivacyCubit</code> enmascara el saldo y los importes de la lista.</div>
-  </div>
-
-  <div class="captura">
-    <div class="barra"><span>Captura 4 — Tema oscuro</span><span class="tag">Reto 1</span></div>
-    <div class="marco"><img src="__CAP4__" alt="Tema oscuro"></div>
-    <div class="pie-cap">El modo elegido se guarda con <code>shared_preferences</code> y se mantiene entre sesiones.</div>
-  </div>
-
-  <div class="captura">
-    <div class="barra"><span>Captura 5 — Color semilla</span><span class="tag">Reto 4</span></div>
-    <div class="marco"><img src="__CAP5__" alt="Color semilla"></div>
-    <div class="pie-cap">Al elegir otro color semilla, <code>ColorScheme.fromSeed</code> recalcula toda la paleta en caliente.</div>
-  </div>
-
-  <div class="captura">
-    <div class="barra"><span>Captura 6 — Estado de error y Reintentar</span><span class="tag">Reto 3</span></div>
-    <div class="marco"><img src="__CAP6__" alt="Error y reintentar"></div>
-    <div class="pie-cap">Si <code>loadSummary</code> falla, se emite <code>BalanceFailure</code> con mensaje y acción de reintento.</div>
-  </div>
-  <h2>6. Pruebas automatizadas</h2>
-  <p>El proyecto incluye <b>22 pruebas</b> (Cubits y widgets) y pasa el análisis estático
-  sin observaciones.</p>
-  <pre><span class="cmt">$</span> flutter analyze
-  No issues found!
-
-<span class="cmt">$</span> flutter test
-  All tests passed!   <span class="cmt">(22 pruebas)</span></pre>
-
+  <h3>4.2. Diseño de la solución</h3>
+  <p>El modo se guarda en disco con <code>shared_preferences</code> y se lee <b>antes</b> de
+  <code>runApp</code>, de modo que el primer frame ya usa el modo correcto (sin parpadeo).
+  El <code>ThemeCubit</code> escribe cada cambio después de <code>emit</code>. Un valor
+  desconocido o nulo se resuelve a <code>ThemeMode.system</code>.</p>
   <table>
-    <tr><th>Archivo de prueba</th><th>Qué verifica</th><th>Reto</th></tr>
-    <tr><td>theme_persistence_test.dart</td><td>Guardar/recuperar tema, ciclo de modos, valor corrupto → sistema</td><td>1</td></tr>
-    <tr><td>privacy_test.dart</td><td><code>PrivacyCubit.toggle</code> y enmascarado del importe</td><td>2</td></tr>
-    <tr><td>balance_test.dart</td><td><code>bloc_test</code>: Loading→Success, Loading→Failure, reintento</td><td>3</td></tr>
-    <tr><td>seed_color_test.dart</td><td>El <code>primary</code> coincide con <code>ColorScheme.fromSeed</code></td><td>4</td></tr>
-    <tr><td>wallet_home_page_test.dart</td><td>Vistas de éxito, error y botón de ojo (integración)</td><td>2·3</td></tr>
+    <tr><th>Elemento</th><th>Decisión</th><th>Justificación</th></tr>
+    <tr><td>Almacenamiento</td><td><code>shared_preferences</code></td><td>Persistencia local simple, suficiente para una preferencia de UI</td></tr>
+    <tr><td>Lectura inicial</td><td>En <code>main</code>, antes de <code>runApp</code></td><td>Evita el parpadeo del primer frame con el modo equivocado</td></tr>
+    <tr><td>Ciclo de temas</td><td>claro → oscuro → sistema → claro</td><td>Un solo botón recorre los tres modos de forma predecible</td></tr>
   </table>
 
+  <h3>4.3. Implementación</h3>
+  <table>
+    <tr><th>Archivo</th><th>Propósito</th><th>Cambios realizados</th></tr>
+    <tr><td><code>theme_preferences.dart</code></td><td>Lee/escribe el modo y el color</td><td>Carga tolerante a valores corruptos</td></tr>
+    <tr><td><code>theme_cubit.dart</code></td><td>Gobierna el tema</td><td>Ciclo de modos y guardado tras <code>emit</code></td></tr>
+    <tr><td><code>main.dart</code></td><td>Arranque</td><td>Lee preferencias antes de <code>runApp</code></td></tr>
+  </table>
+  <pre>ThemeMode loadMode() =&gt; themeModeFromName(_prefs.getString(_modeKey));
+
+ThemeMode themeModeFromName(String? name) =&gt; ThemeMode.values.firstWhere(
+      (mode) =&gt; mode.name == name,
+      orElse: () =&gt; ThemeMode.system,   <span class="cmt">// valor corrupto o nulo → system</span>
+    );
+
+<span class="cmt">// ThemeCubit: recorre los modos y persiste cada cambio</span>
+Future&lt;void&gt; toggle() {
+  final next = switch (state.mode) {
+    ThemeMode.light  =&gt; ThemeMode.dark,
+    ThemeMode.dark   =&gt; ThemeMode.system,
+    ThemeMode.system =&gt; ThemeMode.light,
+  };
+  return setMode(next);
+}
+
+Future&lt;void&gt; setMode(ThemeMode mode) async {
+  emit(state.copyWith(mode: mode));
+  await _preferences.saveMode(mode);   <span class="cmt">// se guarda después de emitir</span>
+}</pre>
+  <p>La lectura vive en <code>main.dart</code> (capa de arranque) y la persistencia en
+  <code>theme_preferences.dart</code> (core), separada del Cubit para poder probarla aislada.</p>
+
+  <h3>4.4. Pruebas ejecutadas</h3>
+  <table>
+    <tr><th>Prueba</th><th>Qué verifica</th><th>Resultado</th></tr>
+    <tr><td><code>theme_persistence_test.dart</code></td><td>Guardar/recuperar el modo y el color</td><td class="ok">Aprobada</td></tr>
+    <tr><td>Ciclo de modos</td><td>claro → oscuro → sistema → claro</td><td class="ok">Aprobada</td></tr>
+    <tr><td>Valor corrupto</td><td>Un valor inválido inicia en <code>system</code></td><td class="ok">Aprobada</td></tr>
+  </table>
+
+  <h3>4.5. Evidencias</h3>
   <div class="captura">
-    <div class="barra"><span>Captura 7 — Resultado de flutter test</span><span class="tag">Evidencia</span></div>
-    <div class="marco"><img src="__CAP7__" alt="Resultado de flutter test"></div>
-    <div class="pie-cap">Salida de la terminal con las 22 pruebas en verde: <code>All tests passed!</code></div>
+    <div class="barra"><span>Figura 1 — Modo claro</span><span class="tag">Reto 1</span></div>
+    <div class="marco"><img src="__CAP2__" alt="Tema claro"></div>
+    <div class="pie-cap"><b>Figura 1.</b> Modo claro activo; es el modo que se persiste con <code>shared_preferences</code>.</div>
+  </div>
+  <div class="captura">
+    <div class="barra"><span>Figura 2 — Modo oscuro conservado</span><span class="tag">Reto 1</span></div>
+    <div class="marco"><img src="__CAP4__" alt="Tema oscuro"></div>
+    <div class="pie-cap"><b>Figura 2.</b> Tras elegir el modo oscuro y reabrir la app, el modo se mantiene entre sesiones.</div>
   </div>
 
-  <h2>7. Conclusiones</h2>
-  <ul>
-    <li>La <b>separación por capas</b> deja las reglas de negocio aisladas de Flutter, lo que facilita las pruebas y el cambio de origen de datos (hoy en memoria, mañana Firebase).</li>
-    <li>El <b>patrón BLoC</b> impone una frontera limpia: los widgets solo escuchan estados, de modo que cada reto se modela como un estado nuevo y no como código disperso.</li>
-    <li>Las <b>clases selladas</b> del estado del saldo obligan a cubrir todos los casos (carga, éxito, error), evitando olvidos en la interfaz.</li>
-    <li>Los <b>cuatro retos</b> quedan integrados y verificados con 22 pruebas y análisis estático sin observaciones.</li>
-  </ul>
+  <h3>4.6. Dificultades y decisiones</h3>
+  <p>El reto real fue evitar el <b>parpadeo</b> del primer frame: si el tema se leía dentro de un
+  widget, la app arrancaba en claro y saltaba al modo guardado. Se resolvió haciendo la lectura
+  <code>await</code> en <code>main</code> antes de <code>runApp</code>, de modo que el estado
+  inicial del Cubit ya trae el modo correcto.</p>
 
-  <h2>8. Repositorio</h2>
-  <p>Código fuente y documentación (<code>README.md</code> y <code>ARQUITECTURA.md</code>):</p>
-  <p><b>URL del repositorio:</b> <a href="https://github.com/Alacops/wallet_unsaac">https://github.com/Alacops/wallet_unsaac</a></p>
+  <h3>4.7. Autoevaluación</h3>
+  <table>
+    <tr><th>Criterio de aceptación</th><th style="width:14%">Cumple</th><th>Evidencia</th></tr>
+    <tr><td>El modo sobrevive al cierre completo.</td><td class="ok">Sí</td><td>Figura 2</td></tr>
+    <tr><td>Sin valor guardado inicia en <code>system</code>.</td><td class="ok">Sí</td><td>Prueba de valor corrupto</td></tr>
+    <tr><td>El ciclo de tres modos funciona.</td><td class="ok">Sí</td><td>Prueba de ciclo</td></tr>
+    <tr><td>Un valor corrupto no rompe el arranque.</td><td class="ok">Sí</td><td><code>themeModeFromName</code></td></tr>
+    <tr><td>Las pruebas pasan.</td><td class="ok">Sí</td><td>flutter test (22)</td></tr>
+  </table>
+  </div>
+
+  <!-- ===== 5. RETO 2 ===== -->
+  <div class="reto-sec">
+  <h2>5. Reto 2 — Saldo privado</h2>
+
+  <h3>5.1. Objetivo y alcance</h3>
+  <p>Permitir ocultar y mostrar todos los importes (saldo, totales y movimientos) con un toque,
+  sin recargar la pantalla ni alterar los datos. Queda fuera persistir la preferencia de
+  privacidad entre sesiones.</p>
+
+  <h3>5.2. Diseño de la solución</h3>
+  <p>La privacidad es un <b>estado de presentación</b>: no cambia los datos, solo cómo se dibujan.
+  Un <code>PrivacyCubit</code> guarda un booleano <code>hidden</code> y los widgets reciben ese
+  dato con un callback; ellos no deciden nada.</p>
+  <table>
+    <tr><th>Elemento</th><th>Decisión</th><th>Justificación</th></tr>
+    <tr><td>Estado</td><td><code>PrivacyState(hidden)</code> con <code>Equatable</code></td><td>Estado inmutable y comparable para reconstrucciones mínimas</td></tr>
+    <tr><td>Widgets afectados</td><td>Saldo, totales y movimientos</td><td>La máscara es transversal a toda la lista</td></tr>
+    <tr><td>Persistencia</td><td>No</td><td>La privacidad es temporal, propia de la sesión actual</td></tr>
+  </table>
+
+  <h3>5.3. Implementación</h3>
+  <table>
+    <tr><th>Archivo</th><th>Propósito</th><th>Cambios realizados</th></tr>
+    <tr><td><code>privacy_cubit.dart</code></td><td>Gobierna la visibilidad</td><td><code>toggle()</code> invierte <code>hidden</code></td></tr>
+    <tr><td><code>balance_card.dart</code></td><td>Muestra el saldo</td><td>Enmascara según <code>hideBalance</code></td></tr>
+    <tr><td><code>movement_tile.dart</code></td><td>Fila de movimiento</td><td>Enmascara el importe</td></tr>
+  </table>
+  <pre>class PrivacyCubit extends Cubit&lt;PrivacyState&gt; {
+  PrivacyCubit() : super(const PrivacyState());
+
+  void toggle() =&gt; emit(state.copyWith(hidden: !state.hidden));
+}</pre>
+  <p>El Cubit es mínimo a propósito: toda la decisión de «ocultar o mostrar» vive en un único
+  lugar y los widgets solo reaccionan al estado.</p>
+
+  <h3>5.4. Pruebas ejecutadas</h3>
+  <table>
+    <tr><th>Prueba</th><th>Qué verifica</th><th>Resultado</th></tr>
+    <tr><td><code>privacy_test.dart</code></td><td><code>toggle</code> invierte el estado</td><td class="ok">Aprobada</td></tr>
+    <tr><td>Enmascarado de importe</td><td>El valor se oculta y se restaura exacto</td><td class="ok">Aprobada</td></tr>
+  </table>
+
+  <h3>5.5. Evidencias</h3>
+  <div class="captura">
+    <div class="barra"><span>Figura 3 — Importes visibles</span><span class="tag">Reto 2</span></div>
+    <div class="marco"><img src="__CAP2__" alt="Importes visibles"></div>
+    <div class="pie-cap"><b>Figura 3.</b> Estado normal: saldo y movimientos con sus importes visibles.</div>
+  </div>
+  <div class="captura">
+    <div class="barra"><span>Figura 4 — Importes ocultos</span><span class="tag">Reto 2</span></div>
+    <div class="marco"><img src="__CAP3__" alt="Importes ocultos"></div>
+    <div class="pie-cap"><b>Figura 4.</b> Al tocar el ojo, <code>PrivacyCubit</code> enmascara el saldo y los importes de la lista.</div>
+  </div>
+
+  <h3>5.6. Dificultades y decisiones</h3>
+  <p>La tentación era poner un <code>setState</code> local en cada widget. Se descartó porque
+  dispersaba la lógica: se optó por un Cubit único para que la privacidad sea una sola fuente de
+  verdad y la interfaz quede declarativa.</p>
+
+  <h3>5.7. Autoevaluación</h3>
+  <table>
+    <tr><th>Criterio de aceptación</th><th style="width:14%">Cumple</th><th>Evidencia</th></tr>
+    <tr><td>El ojo oculta todos los importes.</td><td class="ok">Sí</td><td>Figura 4</td></tr>
+    <tr><td>Al mostrar, los valores son exactos.</td><td class="ok">Sí</td><td>Prueba de enmascarado</td></tr>
+    <tr><td>El estado vive en un Cubit.</td><td class="ok">Sí</td><td><code>privacy_cubit.dart</code></td></tr>
+    <tr><td>Tooltip e icono son accesibles.</td><td class="ok">Sí</td><td>Botón de ojo con <code>tooltip</code></td></tr>
+    <tr><td>Las pruebas pasan.</td><td class="ok">Sí</td><td>flutter test (22)</td></tr>
+  </table>
+  </div>
+
+  <!-- ===== 6. RETO 3 ===== -->
+  <div class="reto-sec">
+  <h2>6. Reto 3 — Saldo con estados de carga, éxito y error</h2>
+
+  <h3>6.1. Objetivo y alcance</h3>
+  <p>Reemplazar un <code>FutureBuilder</code> por estados explícitos de carga, éxito y error, con
+  mensaje y botón de reintento. Queda fuera el reintento automático con backoff.</p>
+
+  <h3>6.2. Diseño de la solución</h3>
+  <p>El saldo se modela con una <b>jerarquía sellada</b>; el compilador obliga a cubrir los cuatro
+  casos en el <code>switch</code> de la vista. La pantalla <b>no habla con el repositorio</b>:
+  solo con el <code>BalanceCubit</code>. El error se representa como un estado con mensaje y el
+  reintento vuelve a llamar <code>load()</code>.</p>
+  <table>
+    <tr><th>Estado</th><th>Cuándo se emite</th><th>Qué muestra la interfaz</th></tr>
+    <tr><td><code>BalanceInitial</code></td><td>Al construir el Cubit</td><td>Indicador de progreso</td></tr>
+    <tr><td><code>BalanceLoading</code></td><td>Al iniciar <code>load()</code></td><td>Indicador de progreso</td></tr>
+    <tr><td><code>BalanceSuccess</code></td><td>Respuesta correcta</td><td>Saldo y lista de movimientos</td></tr>
+    <tr><td><code>BalanceFailure</code></td><td>Excepción al cargar</td><td>Mensaje y botón «Reintentar»</td></tr>
+  </table>
+
+  <h3>6.3. Implementación</h3>
+  <table>
+    <tr><th>Archivo</th><th>Propósito</th><th>Cambios realizados</th></tr>
+    <tr><td><code>balance_state.dart</code></td><td>Estados del saldo</td><td><code>sealed class</code> con 4 casos</td></tr>
+    <tr><td><code>balance_cubit.dart</code></td><td>Carga el resumen</td><td>Maneja <code>isClosed</code> y errores</td></tr>
+    <tr><td><code>wallet_home_page.dart</code></td><td>Dibuja el estado</td><td><code>switch</code> exhaustivo + reintento</td></tr>
+  </table>
+  <pre>Future&lt;void&gt; load() async {
+  emit(const BalanceLoading());
+  try {
+    final summary = await _repository.loadSummary();
+    if (isClosed) return;                 <span class="cmt">// evita emit tras cerrar el Cubit</span>
+    emit(BalanceSuccess(summary));
+  } on Exception {
+    if (isClosed) return;
+    emit(const BalanceFailure(
+      'No se pudo cargar el resumen de la billetera.'));
+  }
+}
+
+<span class="cmt">// Vista: el switch sellado obliga a cubrir los cuatro casos</span>
+switch (state) {
+  BalanceInitial() || BalanceLoading() =&gt; const CircularProgressIndicator(),
+  BalanceFailure(:final message)        =&gt; _ErrorView(message: message,
+      onRetry: () =&gt; context.read&lt;BalanceCubit&gt;().load()),
+  BalanceSuccess(:final summary)        =&gt; _SummaryView(summary: summary),
+};</pre>
+  <p>El guard <code>isClosed</code> impide emitir sobre un Cubit ya cerrado (por ejemplo, si el
+  usuario abandona la pantalla mientras la carga está en curso).</p>
+
+  <h3>6.4. Pruebas ejecutadas</h3>
+  <table>
+    <tr><th>Prueba</th><th>Qué verifica</th><th>Resultado</th></tr>
+    <tr><td>Éxito</td><td>Emite <code>Loading</code> y luego <code>Success</code></td><td class="ok">Aprobada</td></tr>
+    <tr><td>Fallo</td><td>Emite <code>Loading</code> y luego <code>Failure</code></td><td class="ok">Aprobada</td></tr>
+    <tr><td>Reintento</td><td>Vuelve a consultar el repositorio</td><td class="ok">Aprobada</td></tr>
+  </table>
+
+  <h3>6.5. Evidencias</h3>
+  <div class="captura">
+    <div class="barra"><span>Figura 5 — Estado de carga</span><span class="tag">Reto 3</span></div>
+    <div class="marco"><img src="__CAP1__" alt="Estado de carga"></div>
+    <div class="pie-cap"><b>Figura 5.</b> <code>BalanceLoading</code>: la interfaz muestra el indicador de progreso.</div>
+  </div>
+  <div class="captura">
+    <div class="barra"><span>Figura 6 — Error y Reintentar</span><span class="tag">Reto 3</span></div>
+    <div class="marco"><img src="__CAP6__" alt="Error y reintentar"></div>
+    <div class="pie-cap"><b>Figura 6.</b> <code>BalanceFailure</code>: mensaje de error y botón «Reintentar».</div>
+  </div>
+
+  <h3>6.6. Dificultades y decisiones</h3>
+  <p>La dificultad fue el error <i>«Cannot emit new states after calling close»</i> al forzar un
+  fallo y salir rápido de la pantalla. Se resolvió comprobando <code>isClosed</code> antes de cada
+  <code>emit</code>, patrón recomendado para operaciones asíncronas en Cubits.</p>
+
+  <h3>6.7. Autoevaluación</h3>
+  <table>
+    <tr><th>Criterio de aceptación</th><th style="width:14%">Cumple</th><th>Evidencia</th></tr>
+    <tr><td>La carga inicial muestra indicador.</td><td class="ok">Sí</td><td>Figura 5</td></tr>
+    <tr><td>El éxito muestra saldo y movimientos.</td><td class="ok">Sí</td><td>Figuras 1 y 3</td></tr>
+    <tr><td>El fallo muestra mensaje y reintento.</td><td class="ok">Sí</td><td>Figura 6</td></tr>
+    <tr><td>El reintento consulta de nuevo.</td><td class="ok">Sí</td><td>Prueba de reintento</td></tr>
+    <tr><td>La pantalla no accede al repositorio.</td><td class="ok">Sí</td><td><code>balance_cubit.dart</code></td></tr>
+    <tr><td>Las pruebas pasan.</td><td class="ok">Sí</td><td>flutter test (22)</td></tr>
+  </table>
+  </div>
+
+  <!-- ===== 7. RETO 4 ===== -->
+  <div class="reto-sec">
+  <h2>7. Reto 4 — Color semilla configurable</h2>
+
+  <h3>7.1. Objetivo y alcance</h3>
+  <p>Permitir elegir entre varios colores semilla y que la selección se aplique a toda la app, en
+  claro y oscuro, en caliente. Queda fuera ofrecer un selector de color libre (rueda RGB).</p>
+
+  <h3>7.2. Diseño de la solución</h3>
+  <p>El color semilla es un campo del <code>ThemeState</code>; <code>AppTheme</code> lo recibe como
+  parámetro y deriva toda la paleta con <code>ColorScheme.fromSeed</code>. El selector usa
+  <code>BlocSelector</code> para reconstruir solo el indicador del punto activo y no toda la hoja.</p>
+  <table>
+    <tr><th>Elemento</th><th>Decisión</th><th>Justificación</th></tr>
+    <tr><td>Campo de estado</td><td><code>seedColor</code> en <code>ThemeState</code></td><td>Un único origen para el color activo</td></tr>
+    <tr><td>Tema</td><td><code>ColorScheme.fromSeed</code></td><td>Deriva toda la paleta sin fijar colores a mano</td></tr>
+    <tr><td>Selector</td><td><code>BlocSelector</code> por punto</td><td>Reconstruye solo el indicador, no toda la pantalla</td></tr>
+    <tr><td>Persistencia</td><td>Sí (<code>shared_preferences</code>)</td><td>El color también sobrevive al cierre</td></tr>
+  </table>
+
+  <h3>7.3. Implementación</h3>
+  <table>
+    <tr><th>Archivo</th><th>Propósito</th><th>Cambios realizados</th></tr>
+    <tr><td><code>app_theme.dart</code></td><td>Construye el tema</td><td><code>light/dark(Color seed)</code> parametrizados</td></tr>
+    <tr><td><code>theme_cubit.dart</code></td><td>Cambia el color</td><td><code>setSeedColor</code> + persistencia</td></tr>
+    <tr><td><code>seed_color_selector.dart</code></td><td>Selector visual</td><td><code>BlocSelector</code> por punto</td></tr>
+  </table>
+  <pre>static ThemeData _build(Brightness brightness, Color seedColor) {
+  final scheme = ColorScheme.fromSeed(
+    seedColor: seedColor,
+    brightness: brightness,          <span class="cmt">// misma semilla, claro y oscuro</span>
+  );
+  return ThemeData(useMaterial3: true, colorScheme: scheme, ...);
+}
+
+<span class="cmt">// Cada punto se reconstruye solo si cambia el color activo</span>
+BlocSelector&lt;ThemeCubit, ThemeState, bool&gt;(
+  selector: (state) =&gt; state.seedColor == color,
+  builder: (context, selected) =&gt; _SeedDot(color, selected),
+);</pre>
+
+  <h3>7.4. Pruebas ejecutadas</h3>
+  <table>
+    <tr><th>Prueba</th><th>Qué verifica</th><th>Resultado</th></tr>
+    <tr><td><code>seed_color_test.dart</code></td><td>El <code>primary</code> coincide con <code>ColorScheme.fromSeed</code></td><td class="ok">Aprobada</td></tr>
+  </table>
+
+  <h3>7.5. Evidencias</h3>
+  <div class="captura">
+    <div class="barra"><span>Figura 7 — Color semilla en claro</span><span class="tag">Reto 4</span></div>
+    <div class="marco"><img src="__CAP5__" alt="Color semilla en claro"></div>
+    <div class="pie-cap"><b>Figura 7.</b> Al elegir otro color, <code>ColorScheme.fromSeed</code> recalcula toda la paleta en caliente (modo claro).</div>
+  </div>
+  <div class="captura">
+    <div class="barra"><span>Figura 8 — Paleta en modo oscuro</span><span class="tag">Reto 4</span></div>
+    <div class="marco"><img src="__CAP4__" alt="Paleta en oscuro"></div>
+    <div class="pie-cap"><b>Figura 8.</b> La misma semilla deriva la paleta en modo oscuro; el color funciona en ambos brillos.</div>
+  </div>
+
+  <h3>7.6. Dificultades y decisiones</h3>
+  <p>Cambiar el color reconstruía toda la hoja y perdía rendimiento. Se usó <code>BlocSelector</code>
+  por punto del selector, de modo que solo se repinta el indicador de selección y no la pantalla
+  completa.</p>
+
+  <h3>7.7. Autoevaluación</h3>
+  <table>
+    <tr><th>Criterio de aceptación</th><th style="width:14%">Cumple</th><th>Evidencia</th></tr>
+    <tr><td>Hay al menos cuatro colores.</td><td class="ok">Sí</td><td><code>AppTheme.seeds</code> (5 colores)</td></tr>
+    <tr><td>La elección se aplica a toda la app.</td><td class="ok">Sí</td><td>Figura 7</td></tr>
+    <tr><td>Funciona en claro y oscuro.</td><td class="ok">Sí</td><td>Figura 8</td></tr>
+    <tr><td>El color activo se indica.</td><td class="ok">Sí</td><td>Check en el punto (<code>BlocSelector</code>)</td></tr>
+    <tr><td><code>seedColor</code> participa en props.</td><td class="ok">Sí</td><td><code>theme_state.dart</code></td></tr>
+    <tr><td>La prueba del <code>primary</code> pasa.</td><td class="ok">Sí</td><td><code>seed_color_test.dart</code></td></tr>
+  </table>
+  </div>
+
+  <!-- ===== 8. CONCLUSIONES ===== -->
+  <div class="reto-sec">
+  <h2>8. Conclusiones y aprendizajes</h2>
+  <ol>
+    <li>Leer el tema en <code>main</code> antes de <code>runApp</code> eliminó el parpadeo del
+    primer frame: el modo guardado se verifica en la Figura 2 y en la prueba de persistencia.</li>
+    <li>Modelar el saldo con una <b>jerarquía sellada</b> obligó, por compilación, a cubrir carga,
+    éxito y error; esto se verifica con las pruebas de <code>balance_test.dart</code> (Loading→Success
+    y Loading→Failure) y la Figura 6.</li>
+    <li>Parametrizar el color con <code>ColorScheme.fromSeed</code> y aislar la reconstrucción con
+    <code>BlocSelector</code> permitió cambiar la paleta en caliente sin repintar toda la hoja,
+    verificado por <code>seed_color_test.dart</code> y las Figuras 7 y 8.</li>
+  </ol>
+  </div>
+
+  <!-- ===== 9. DECLARACIÓN DE ORIGINALIDAD ===== -->
+  <h2>9. Declaración de originalidad y uso de herramientas de IA</h2>
+  <p>Declaro que este informe y el código entregado son de mi autoría, que comprendo cada parte del
+  código y que las fuentes consultadas están citadas.</p>
+  <table>
+    <tr><th>Herramienta</th><th>Uso</th><th>Verificación realizada</th></tr>
+    <tr><td>Asistente de IA</td><td>Apoyo en redacción del informe y revisión de la estructura frente a la plantilla</td><td>Comprendí y revisé el código; ejecuté <code>flutter analyze</code> y <code>flutter test</code></td></tr>
+    <tr><td>Documentación oficial</td><td>Consulta de BLoC y Flutter</td><td>Contrasté con las versiones Flutter 3.47.5 / Dart 3.13.4</td></tr>
+  </table>
+  <p class="firma">Firma: ______________________________&nbsp;&nbsp;&nbsp;Fecha: 17 / 11 / 2026</p>
+
+  <!-- ===== 10. REFERENCIAS ===== -->
+  <h2>10. Referencias</h2>
+  <div class="ref">
+    <p>Bloc Library. (2026). <i>Bloc library documentation</i>. https://bloclibrary.dev/</p>
+    <p>Google. (2026). <i>Flutter documentation</i>. https://docs.flutter.dev/</p>
+    <p>Google. (2026). <i>Material Design 3: Color system</i>. https://m3.material.io/styles/color/</p>
+    <p>Flutter. (2026). <i>shared_preferences package</i>. https://pub.dev/packages/shared_preferences</p>
+  </div>
+
+  <!-- ===== ANEXO A ===== -->
+  <h2>Anexo A. Lista de verificación de entrega</h2>
+  <table>
+    <tr><th style="width:8%">N.º</th><th>Verificación</th><th style="width:14%">Cumple</th></tr>
+    <tr><td>1</td><td>El repositorio compila y <code>flutter analyze</code> está limpio.</td><td class="ok">Sí</td></tr>
+    <tr><td>2</td><td><code>flutter test</code> pasa todas las pruebas.</td><td class="ok">Sí</td></tr>
+    <tr><td>3</td><td>Los cuatro retos están implementados.</td><td class="ok">Sí</td></tr>
+    <tr><td>4</td><td>Cada reto tiene al menos una captura legible.</td><td class="ok">Sí</td></tr>
+    <tr><td>5</td><td>El informe usa esta plantilla y respeta la numeración.</td><td class="ok">Sí</td></tr>
+    <tr><td>6</td><td>Las referencias están en APA 7.ª edición.</td><td class="ok">Sí</td></tr>
+    <tr><td>7</td><td>La declaración de originalidad está firmada.</td><td>Pendiente de firma</td></tr>
+    <tr><td>8</td><td>El PDF se subió al aula virtual antes de la fecha límite.</td><td>Pendiente</td></tr>
+  </table>
 </section>
