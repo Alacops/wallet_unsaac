@@ -107,13 +107,13 @@
   .chip { display:inline-block; background:#f3eef0; color:var(--granate-dark); border:1px solid var(--linea); border-radius:20px; padding:1px 10px; font-size:9pt; margin:1px 2px; }
 
   @media print {
+    @page { margin: 16mm; }
     body { background: #fff; font-size: 10.6pt; }
-    .hoja { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 14mm 15mm; }
-    .salto { page-break-before: always; }
-    .captura, .reto, table, pre, figure { page-break-inside: avoid; }
-    h2 { page-break-after: avoid; }
+    .hoja { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 0; }
+    .captura, .reto, table, pre { page-break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; }
     a { color: var(--tinta); text-decoration: none; }
-    .caratula { height: 250mm; }
+    .caratula { height: 253mm; }
   }
 </style>
 
@@ -205,11 +205,7 @@
     <tr><td><b>core</b></td><td>Tema, formato, configuración, perfil</td><td>No depende de la billetera</td></tr>
   </table>
 
-</section>
-
-<!-- ============================ LOS 4 RETOS ============================ -->
-<section class="hoja">
-  <h2 class="salto">4. Los cuatro retos</h2>
+  <h2>4. Los cuatro retos</h2>
   <p>Cada reto se resuelve como <b>un estado nuevo bien modelado</b>. La pantalla solo
   escucha estados con <code>BlocBuilder</code>; nunca modifica datos a mano.</p>
 
@@ -253,11 +249,7 @@ emit(BalanceLoading())  ───────────────►  BlocBu
       ▼
   ┌─ éxito ─► emit(BalanceSuccess(summary)) ─► saldo + lista
   └─ error ─► emit(BalanceFailure(mensaje)) ─► error + "Reintentar"</pre>
-</section>
-
-<!-- ============================ DEMOSTRACIÓN / CAPTURAS ============================ -->
-<section class="hoja">
-  <h2 class="salto">5. Secuencia de demostración (capturas)</h2>
+  <h2>5. Secuencia de demostración (capturas)</h2>
   <p>Las siguientes capturas evidencian la ejecución de la app y la resolución de los
   cuatro retos, en el orden en que se presentan al usuario.</p>
 
@@ -296,11 +288,7 @@ emit(BalanceLoading())  ───────────────►  BlocBu
     <div class="marco"><img src="__CAP6__" alt="Error y reintentar"></div>
     <div class="pie-cap">Si <code>loadSummary</code> falla, se emite <code>BalanceFailure</code> con mensaje y acción de reintento.</div>
   </div>
-</section>
-
-<!-- ============================ PRUEBAS ============================ -->
-<section class="hoja">
-  <h2 class="salto">6. Pruebas automatizadas</h2>
+  <h2>6. Pruebas automatizadas</h2>
   <p>El proyecto incluye <b>22 pruebas</b> (Cubits y widgets) y pasa el análisis estático
   sin observaciones.</p>
   <pre><span class="cmt">$</span> flutter analyze
