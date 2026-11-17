@@ -53,3 +53,7 @@ app.*.map.json
 android/key.properties
 **/*.jks
 **/*.keystore
+
+# Firma personal y PDF firmado — no publicar en repo público
+evidencias/firma.png
+*_FIRMADO.pdf

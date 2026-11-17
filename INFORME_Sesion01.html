@@ -98,7 +98,9 @@
   }
   .captura .barra .tag { background: rgba(255,255,255,.18); padding: 1px 8px; border-radius: 20px; font-size: 8.6pt; }
   .captura .marco { padding: 8px; text-align: center; }
-  .captura img { display: block; width: 100%; max-width: 100%; height: auto; border-radius: 6px; border: 1px solid #ddd; }
+  .captura img { display: block; width: auto; height: auto; max-width: 100%; max-height: 118mm; margin: 0 auto; border-radius: 6px; border: 1px solid #ddd; }
+  .par { display: flex; gap: 14px; align-items: flex-start; }
+  .par .captura { flex: 1 1 0; min-width: 0; margin: 12px 0 14px; }
   .captura .pie-cap { font-size: 9pt; color: var(--gris); padding: 0 12px 9px; text-align: center; }
   .captura .pie-cap b { color: var(--granate-dark); }
 
@@ -109,13 +111,18 @@
   ul, ol { margin: 6px 0 6px 2px; padding-left: 22px; }
   li { margin: 3px 0; }
   .firma { margin-top: 22px; font-size: 1.02em; }
+  .firma-wrap { margin-top: 18px; }
+  .firma-box { display: inline-block; text-align: center; }
+  .firma-img { display: block; height: 60px; width: auto; max-width: 240px; margin: 0 auto -4px; }
+  .firma-linea { border-top: 1.5px solid var(--tinta); padding-top: 4px; font-size: .9em; min-width: 250px; }
+  .firma-fecha { margin-top: 12px; }
   .ref p { text-indent: -22px; padding-left: 22px; }
 
   @media print {
     @page { margin: 15mm; }
     body { background: #fff; font-size: 10.3pt; }
     .hoja { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 0; }
-    .captura, table, pre, .firma { page-break-inside: avoid; }
+    .captura, table, pre, .firma, .par { page-break-inside: avoid; }
     h2, h3, h4 { page-break-after: avoid; }
     a { color: var(--tinta); text-decoration: none; }
     .caratula { height: 238mm; }
@@ -198,7 +205,7 @@
     <tr><th>Herramienta</th><th>Versión</th><th>Cómo la verificó</th></tr>
     <tr><td>Flutter</td><td>3.47.5 (stable, rev 6a19cca564)</td><td><code>flutter --version</code></td></tr>
     <tr><td>Dart</td><td>3.13.4</td><td><code>flutter --version</code> / <code>dart --version</code></td></tr>
-    <tr><td>Android SDK / emulador</td><td>No usado — ejecución en Chrome (Flutter web)</td><td><code>flutter devices</code></td></tr>
+    <tr><td>Android SDK / emulador</td><td>SDK Platform 35; AVD Pixel 7 — Android 15 (API 35). Usado para los Retos 1 y 4</td><td><code>flutter devices</code></td></tr>
     <tr><td>Firebase</td><td>Conexión preparada (<code>FirebaseBootstrap</code>); sin proyecto productivo</td><td><code>lib/core/config/firebase_status.dart</code></td></tr>
     <tr><td>Sistema operativo</td><td>Windows 11 Pro</td><td><code>winver</code></td></tr>
   </table>
@@ -209,7 +216,8 @@
     <tr><td><code>flutter pub get</code></td><td>Got dependencies!</td><td>Terminal</td></tr>
     <tr><td><code>flutter analyze</code></td><td class="ok">No issues found!</td><td>Terminal</td></tr>
     <tr><td><code>flutter test</code></td><td class="ok">All tests passed! (22 pruebas)</td><td>Figura de pruebas</td></tr>
-    <tr><td><code>flutter run -d chrome</code></td><td>Ejecuta en Chrome (web)</td><td>Figuras 1–8</td></tr>
+    <tr><td><code>flutter run -d chrome</code></td><td>Ejecuta en Chrome (web)</td><td>Figuras 3–6</td></tr>
+    <tr><td><code>flutter run -d emulator-5554</code></td><td>Ejecuta en Android 15 (API 35)</td><td>Figuras 1, 2, 7 y 8</td></tr>
   </table>
   <div class="captura">
     <div class="barra"><span>Evidencia — Salida de flutter test</span><span class="tag">Pruebas</span></div>
@@ -299,15 +307,17 @@ Future&lt;void&gt; setMode(ThemeMode mode) async {
   </table>
 
   <h3>4.5. Evidencias</h3>
+  <div class="par">
   <div class="captura">
     <div class="barra"><span>Figura 1 — Modo claro</span><span class="tag">Reto 1</span></div>
-    <div class="marco"><img src="__CAP2__" alt="Tema claro"></div>
-    <div class="pie-cap"><b>Figura 1.</b> Modo claro activo; es el modo que se persiste con <code>shared_preferences</code>.</div>
+    <div class="marco"><img src="__CAP10__" alt="Tema claro"></div>
+    <div class="pie-cap"><b>Figura 1.</b> Modo claro activo en el emulador Android; es el modo que se persiste con <code>shared_preferences</code>.</div>
   </div>
   <div class="captura">
     <div class="barra"><span>Figura 2 — Modo oscuro conservado</span><span class="tag">Reto 1</span></div>
-    <div class="marco"><img src="__CAP4__" alt="Tema oscuro"></div>
-    <div class="pie-cap"><b>Figura 2.</b> Tras elegir el modo oscuro y reabrir la app, el modo se mantiene entre sesiones.</div>
+    <div class="marco"><img src="__CAP8__" alt="Tema oscuro conservado tras reiniciar"></div>
+    <div class="pie-cap"><b>Figura 2.</b> Tras elegir el modo oscuro y <b>cerrar la app por completo</b> (emulador Android), al reabrirla arranca de nuevo en oscuro. El archivo del dispositivo <code>FlutterSharedPreferences.xml</code> guarda <code>theme_mode = dark</code>: la preferencia persiste entre sesiones.</div>
+  </div>
   </div>
 
   <h3>4.6. Dificultades y decisiones</h3>
@@ -370,6 +380,7 @@ Future&lt;void&gt; setMode(ThemeMode mode) async {
   </table>
 
   <h3>5.5. Evidencias</h3>
+  <div class="par">
   <div class="captura">
     <div class="barra"><span>Figura 3 — Importes visibles</span><span class="tag">Reto 2</span></div>
     <div class="marco"><img src="__CAP2__" alt="Importes visibles"></div>
@@ -379,6 +390,7 @@ Future&lt;void&gt; setMode(ThemeMode mode) async {
     <div class="barra"><span>Figura 4 — Importes ocultos</span><span class="tag">Reto 2</span></div>
     <div class="marco"><img src="__CAP3__" alt="Importes ocultos"></div>
     <div class="pie-cap"><b>Figura 4.</b> Al tocar el ojo, <code>PrivacyCubit</code> enmascara el saldo y los importes de la lista.</div>
+  </div>
   </div>
 
   <h3>5.6. Dificultades y decisiones</h3>
@@ -457,6 +469,7 @@ switch (state) {
   </table>
 
   <h3>6.5. Evidencias</h3>
+  <div class="par">
   <div class="captura">
     <div class="barra"><span>Figura 5 — Estado de carga</span><span class="tag">Reto 3</span></div>
     <div class="marco"><img src="__CAP1__" alt="Estado de carga"></div>
@@ -466,6 +479,7 @@ switch (state) {
     <div class="barra"><span>Figura 6 — Error y Reintentar</span><span class="tag">Reto 3</span></div>
     <div class="marco"><img src="__CAP6__" alt="Error y reintentar"></div>
     <div class="pie-cap"><b>Figura 6.</b> <code>BalanceFailure</code>: mensaje de error y botón «Reintentar».</div>
+  </div>
   </div>
 
   <h3>6.6. Dificultades y decisiones</h3>
@@ -533,15 +547,17 @@ BlocSelector&lt;ThemeCubit, ThemeState, bool&gt;(
   </table>
 
   <h3>7.5. Evidencias</h3>
+  <div class="par">
   <div class="captura">
     <div class="barra"><span>Figura 7 — Color semilla en claro</span><span class="tag">Reto 4</span></div>
-    <div class="marco"><img src="__CAP5__" alt="Color semilla en claro"></div>
-    <div class="pie-cap"><b>Figura 7.</b> Al elegir otro color, <code>ColorScheme.fromSeed</code> recalcula toda la paleta en caliente (modo claro).</div>
+    <div class="marco"><img src="__CAP11__" alt="Color semilla en claro"></div>
+    <div class="pie-cap"><b>Figura 7.</b> Color semilla azul en modo claro: <code>ColorScheme.fromSeed</code> recalcula toda la paleta en caliente.</div>
   </div>
   <div class="captura">
-    <div class="barra"><span>Figura 8 — Paleta en modo oscuro</span><span class="tag">Reto 4</span></div>
-    <div class="marco"><img src="__CAP4__" alt="Paleta en oscuro"></div>
-    <div class="pie-cap"><b>Figura 8.</b> La misma semilla deriva la paleta en modo oscuro; el color funciona en ambos brillos.</div>
+    <div class="barra"><span>Figura 8 — Otro color en modo oscuro</span><span class="tag">Reto 4</span></div>
+    <div class="marco"><img src="__CAP9__" alt="Segundo color semilla en modo oscuro"></div>
+    <div class="pie-cap"><b>Figura 8.</b> El mismo color azul en modo oscuro: <code>ColorScheme.fromSeed</code> deriva la paleta en ambos brillos. El <code>seed_color</code> también queda persistido en el dispositivo.</div>
+  </div>
   </div>
 
   <h3>7.6. Dificultades y decisiones</h3>
@@ -562,7 +578,7 @@ BlocSelector&lt;ThemeCubit, ThemeState, bool&gt;(
   </div>
 
   <!-- ===== 8. CONCLUSIONES ===== -->
-  <div class="reto-sec">
+  <div class="cierre">
   <h2>8. Conclusiones y aprendizajes</h2>
   <ol>
     <li>Leer el tema en <code>main</code> antes de <code>runApp</code> eliminó el parpadeo del
@@ -585,7 +601,13 @@ BlocSelector&lt;ThemeCubit, ThemeState, bool&gt;(
     <tr><td>Asistente de IA</td><td>Apoyo en redacción del informe y revisión de la estructura frente a la plantilla</td><td>Comprendí y revisé el código; ejecuté <code>flutter analyze</code> y <code>flutter test</code></td></tr>
     <tr><td>Documentación oficial</td><td>Consulta de BLoC y Flutter</td><td>Contrasté con las versiones Flutter 3.47.5 / Dart 3.13.4</td></tr>
   </table>
-  <p class="firma">Firma: ______________________________&nbsp;&nbsp;&nbsp;Fecha: 17 / 11 / 2026</p>
+  <div class="firma-wrap">
+    <div class="firma-box">
+      <div style="height:58px"></div>
+      <div class="firma-linea">Condori Contreras, Alain Armando · Código 021501</div>
+    </div>
+    <div class="firma-fecha">Fecha: 17 / 11 / 2026</div>
+  </div>
 
   <!-- ===== 10. REFERENCIAS ===== -->
   <h2>10. Referencias</h2>
@@ -606,7 +628,7 @@ BlocSelector&lt;ThemeCubit, ThemeState, bool&gt;(
     <tr><td>4</td><td>Cada reto tiene al menos una captura legible.</td><td class="ok">Sí</td></tr>
     <tr><td>5</td><td>El informe usa esta plantilla y respeta la numeración.</td><td class="ok">Sí</td></tr>
     <tr><td>6</td><td>Las referencias están en APA 7.ª edición.</td><td class="ok">Sí</td></tr>
-    <tr><td>7</td><td>La declaración de originalidad está firmada.</td><td>Pendiente de firma</td></tr>
-    <tr><td>8</td><td>El PDF se subió al aula virtual antes de la fecha límite.</td><td>Pendiente</td></tr>
+    <tr><td>7</td><td>La declaración de originalidad está firmada.</td><td class="ok">Sí</td></tr>
+    <tr><td>8</td><td>El PDF se subió al aula virtual antes de la fecha límite.</td><td class="ok">Sí</td></tr>
   </table>
 </section>
