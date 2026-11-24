@@ -16,6 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthRegisterRequested>(_onRegister);
     on<AuthLogoutRequested>(_onLogout);
     on<AuthPasswordResetRequested>(_onPasswordReset);
+    on<AuthDisplayNameUpdated>(_onDisplayNameUpdated);
   }
 
   final AuthRepository repository;
@@ -122,6 +123,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } on Exception {
       if (emit.isDone) return;
       emit(const AuthUnauthenticated(message: resetEmailSentMessage));
+    }
+  }
+
+  Future<void> _onDisplayNameUpdated(
+    AuthDisplayNameUpdated event,
+    Emitter<AuthState> emit,
+  ) async {
+    final current = state;
+    if (current is! AuthAuthenticated) return;
+    final name = event.name.trim();
+    // Un nombre vacío no cambia nada: se ignora el evento.
+    if (name.isEmpty) return;
+    try {
+      final user = await repository.updateDisplayName(name);
+      if (emit.isDone) return;
+      emit(AuthAuthenticated(user));
+    } on AuthException catch (error) {
+      if (emit.isDone) return;
+      emit(AuthAuthenticated(current.user, message: error.message));
+    } on Exception {
+      if (emit.isDone) return;
+      emit(AuthAuthenticated(current.user, message: AuthMessages.unknown));
     }
   }
 

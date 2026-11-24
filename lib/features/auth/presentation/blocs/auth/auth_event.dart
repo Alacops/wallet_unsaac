@@ -49,3 +49,13 @@ final class AuthPasswordResetRequested extends AuthEvent {
   @override
   List<Object?> get props => [email];
 }
+
+/// Pide actualizar el nombre para mostrar del usuario actual (Reto 2).
+final class AuthDisplayNameUpdated extends AuthEvent {
+  const AuthDisplayNameUpdated(this.name);
+
+  final String name;
+
+  @override
+  List<Object?> get props => [name];
+}

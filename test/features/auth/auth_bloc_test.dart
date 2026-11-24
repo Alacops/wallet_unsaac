@@ -161,5 +161,28 @@ void main() {
         const AuthUnauthenticated(message: AuthBloc.resetEmailSentMessage),
       ],
     );
+
+    blocTest<AuthBloc, AuthState>(
+      'actualizar el nombre conserva el uid y cambia el estado (Reto 2)',
+      build: () => AuthBloc(repository: FakeAuthRepository(user: _user)),
+      seed: () => const AuthAuthenticated(_user),
+      act: (bloc) => bloc.add(const AuthDisplayNameUpdated('Alain C.')),
+      expect: () => [
+        AuthAuthenticated(_user.copyWith(displayName: 'Alain C.')),
+      ],
+      verify: (bloc) {
+        final state = bloc.state as AuthAuthenticated;
+        expect(state.user.uid, _user.uid);
+        expect(state.user.displayName, 'Alain C.');
+      },
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'un nombre vacío no cambia el estado (Reto 2)',
+      build: () => AuthBloc(repository: FakeAuthRepository(user: _user)),
+      seed: () => const AuthAuthenticated(_user),
+      act: (bloc) => bloc.add(const AuthDisplayNameUpdated('   ')),
+      expect: () => <AuthState>[],
+    );
   });
 }

@@ -4,8 +4,10 @@ import 'package:wallet_unsaac/core/config/app_profile.dart';
 import 'package:wallet_unsaac/core/config/firebase_status.dart';
 import 'package:wallet_unsaac/core/theme/theme_cubit.dart';
 import 'package:wallet_unsaac/core/theme/theme_state.dart';
+import 'package:wallet_unsaac/features/auth/domain/entities/auth_user.dart';
 import 'package:wallet_unsaac/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:wallet_unsaac/features/auth/presentation/blocs/auth/auth_event.dart';
+import 'package:wallet_unsaac/features/auth/presentation/blocs/auth/auth_state.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/wallet_summary.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movement_filter.dart';
@@ -48,6 +50,7 @@ class WalletHomePage extends StatelessWidget {
           ],
         ),
         actions: const [
+          _ProfileButton(),
           _ClearHistoryButton(),
           _ThemeModeButton(),
           _SignOutButton(),
@@ -140,6 +143,81 @@ class _ThemeModeButton extends StatelessWidget {
           tooltip: tooltip,
           icon: Icon(icon),
           onPressed: () => context.read<ThemeCubit>().toggle(),
+        );
+      },
+    );
+  }
+}
+
+/// Botón del AppBar con la inicial del usuario (Reto 2). Al tocarlo abre un
+/// formulario mínimo para editar el nombre para mostrar.
+class _ProfileButton extends StatelessWidget {
+  const _ProfileButton();
+
+  Future<void> _editName(BuildContext context, AuthUser user) async {
+    final bloc = context.read<AuthBloc>();
+    final controller = TextEditingController(text: user.displayName ?? '');
+    final name = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Editar perfil'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          textCapitalization: TextCapitalization.words,
+          decoration: const InputDecoration(labelText: 'Nombre para mostrar'),
+          onSubmitted: (value) => Navigator.of(dialogContext).pop(value),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(controller.text),
+            child: const Text('Guardar'),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    final trimmed = name?.trim() ?? '';
+    if (trimmed.isNotEmpty) {
+      bloc.add(AuthDisplayNameUpdated(trimmed));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthBloc, AuthState>(
+      buildWhen: (previous, current) {
+        final before = previous is AuthAuthenticated ? previous.user : null;
+        final now = current is AuthAuthenticated ? current.user : null;
+        return before != now;
+      },
+      builder: (context, state) {
+        if (state is! AuthAuthenticated) return const SizedBox.shrink();
+        final user = state.user;
+        final label = (user.displayName?.trim().isNotEmpty ?? false)
+            ? user.displayName!.trim()
+            : user.email;
+        final initial = label.isNotEmpty ? label[0].toUpperCase() : '?';
+        final scheme = Theme.of(context).colorScheme;
+        return IconButton(
+          tooltip: 'Perfil: $label',
+          onPressed: () => _editName(context, user),
+          icon: CircleAvatar(
+            radius: 14,
+            backgroundColor: scheme.primaryContainer,
+            child: Text(
+              initial,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: scheme.onPrimaryContainer,
+              ),
+            ),
+          ),
         );
       },
     );

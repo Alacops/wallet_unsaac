@@ -23,6 +23,7 @@ class FakeAuthRepository implements AuthRepository {
   AuthException? registerError;
   AuthException? signOutError;
   AuthException? resetError;
+  AuthException? updateNameError;
   int resetCalls = 0;
 
   @override
@@ -65,5 +66,15 @@ class FakeAuthRepository implements AuthRepository {
   Future<void> sendPasswordResetEmail(String email) async {
     resetCalls++;
     if (resetError != null) throw resetError!;
+  }
+
+  @override
+  Future<AuthUser> updateDisplayName(String name) async {
+    if (updateNameError != null) throw updateNameError!;
+    final base =
+        _currentUser ?? const AuthUser(uid: 'uid-fake', email: 'fake@unsaac');
+    final updated = base.copyWith(displayName: name);
+    _currentUser = updated;
+    return updated;
   }
 }

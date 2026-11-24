@@ -23,4 +23,8 @@ abstract interface class AuthRepository {
 
   /// Envía un correo para restablecer la contraseña (Reto 1).
   Future<void> sendPasswordResetEmail(String email);
+
+  /// Actualiza el nombre para mostrar del usuario actual (Reto 2). El `uid` no
+  /// cambia. Devuelve el usuario actualizado.
+  Future<AuthUser> updateDisplayName(String name);
 }

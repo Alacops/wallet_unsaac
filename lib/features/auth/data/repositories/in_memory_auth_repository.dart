@@ -97,6 +97,23 @@ class InMemoryAuthRepository implements AuthRepository {
     await _simulateNetwork();
   }
 
+  @override
+  Future<AuthUser> updateDisplayName(String name) async {
+    await _simulateNetwork();
+    final current = _currentUser;
+    if (current == null) {
+      throw const AuthException(
+        AuthFailureReason.unknown,
+        AuthMessages.unknown,
+      );
+    }
+    final updated = current.copyWith(displayName: name.trim());
+    _currentUser = updated;
+    _users[current.email] = updated;
+    _changes.add(updated);
+    return updated;
+  }
+
   String _normalize(String email) => email.trim().toLowerCase();
 
   Future<void> _simulateNetwork() async {

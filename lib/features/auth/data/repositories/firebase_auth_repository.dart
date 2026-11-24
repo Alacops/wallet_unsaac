@@ -60,6 +60,24 @@ class FirebaseAuthRepository implements AuthRepository {
     }
   }
 
+  @override
+  Future<AuthUser> updateDisplayName(String name) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw const AuthException(
+        AuthFailureReason.unknown,
+        AuthMessages.unknown,
+      );
+    }
+    try {
+      await user.updateDisplayName(name.trim());
+      await user.reload();
+      return _toAuthUser(_auth.currentUser)!;
+    } on fb.FirebaseAuthException catch (error) {
+      throw mapFirebaseAuthException(error);
+    }
+  }
+
   Future<AuthUser> _authenticate(
     Future<fb.UserCredential> Function() action,
   ) async {

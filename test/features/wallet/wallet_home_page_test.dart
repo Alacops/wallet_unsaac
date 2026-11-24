@@ -7,6 +7,8 @@ import 'package:wallet_unsaac/core/theme/app_theme.dart';
 import 'package:wallet_unsaac/core/theme/theme_cubit.dart';
 import 'package:wallet_unsaac/core/theme/theme_preferences.dart';
 import 'package:wallet_unsaac/core/theme/theme_state.dart';
+import 'package:wallet_unsaac/features/auth/data/repositories/in_memory_auth_repository.dart';
+import 'package:wallet_unsaac/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:wallet_unsaac/features/wallet/data/repositories/in_memory_wallet_repository.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/wallet_summary.dart';
@@ -87,6 +89,9 @@ Future<void> _pumpHome(
       providers: [
         BlocProvider<ThemeCubit>(create: (_) => ThemeCubit(prefs)),
         BlocProvider<PrivacyCubit>(create: (_) => PrivacyCubit()),
+        BlocProvider<AuthBloc>(
+          create: (_) => AuthBloc(repository: InMemoryAuthRepository()),
+        ),
         BlocProvider<MovementsBloc>(
           create: (_) =>
               MovementsBloc(repository: repo)..add(const MovementsStarted()),
