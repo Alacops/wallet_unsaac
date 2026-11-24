@@ -6,7 +6,8 @@ Aplicativo de finanzas personales para Android del curso *Desarrollo de Software
 - **Sesión 1:** arquitectura por capas, tema Material 3 claro/oscuro, conexión
   preparada para Firebase y los cuatro retos de esa guía.
 - **Sesión 2 (entregable D1):** primer **flujo BLoC completo** para los movimientos
-  (carga, alta, baja y limpieza) con pruebas unitarias.
+  (carga, alta, edición, baja y limpieza) con pruebas unitarias, más los **cuatro
+  retos** de la guía (edición, guardado visible, error con reintento y filtro).
 
 - **Autor:** 021501@unsaac.edu.pe
 - **Docente:** Mtro. Ing. Yover Collantes Valer
@@ -16,7 +17,7 @@ Aplicativo de finanzas personales para Android del curso *Desarrollo de Software
 
 ```
 flutter analyze   →  No issues found!
-flutter test      →  +32: All tests passed!
+flutter test      →  +39: All tests passed!
 ```
 
 ## Entorno
@@ -35,7 +36,7 @@ Dependencias del flujo: `flutter_bloc`, `equatable` y `bloc_test` (esta última 
 ```bash
 flutter pub get      # instalar dependencias
 flutter analyze      # análisis estático (debe salir "No issues found!")
-flutter test         # 32 pruebas (dominio, bloc, Cubits y widgets)
+flutter test         # 39 pruebas (dominio, bloc, Cubits y widgets)
 flutter run          # ejecutar en emulador o dispositivo Android
 ```
 
@@ -140,15 +141,29 @@ Lista y saldo reconstruidos
 6. **`emit.isDone` se comprueba tras cada `await`:** si el bloc se cerró durante la
    operación, emitir lanzaría `StateError`.
 
+## Los cuatro retos (Sesión 2)
+
+Integrados en el mismo flujo (alimentan los criterios «Flujo BLoC» y «Pruebas»):
+
+| Reto | Nivel | Qué agrega |
+|------|-------|-----------|
+| 1 · Edición | Básico | `Movement.copyWith` (id inmutable), evento `MovementUpdated`, `updateMovement` en el repositorio (conserva la posición) y formulario mínimo |
+| 2 · Guardado visible | Intermedio | `isSaving` en `MovementsReady`; el alta marca el guardado sin ocultar la lista |
+| 3 · Error y reintento | Intermedio | `errorMessage` transitorio + `BlocListener`/`SnackBar`; el fallo de alta/baja conserva la lista |
+| 4 · Filtro por tipo | Avanzado | `MovementFilter` + `visibleMovements`, `SegmentedButton` y `BlocSelector` (no reconstruye la tarjeta de saldo) |
+
+> Los retos se trabajaron de forma acumulativa sobre `sesion-02` (comparten el
+> mismo `MovementsReady`), con un commit descriptivo por reto.
+
 ## Pruebas
 
-32 pruebas en `test/`:
+39 pruebas en `test/`:
 
 | Archivo | Qué verifica |
 |---------|--------------|
-| `movements_bloc_test.dart` | 9 pruebas del bloc: estado inicial, alta, baja, no-emisión, limpieza y tres caminos de error (lectura, alta, baja) |
+| `movements_bloc_test.dart` | pruebas del bloc: estado inicial, alta, edición, baja, no-emisión, limpieza, guardado visible, filtro por tipo y caminos de error (lectura, alta, baja) |
 | `movements_state_test.dart` | 5 pruebas de igualdad por valor de entidades y estados |
-| `wallet_home_page_test.dart` | vistas de éxito, privacidad y error de la pantalla |
+| `wallet_home_page_test.dart` | vistas de éxito, privacidad, error de carga y SnackBar de fallo de alta |
 | `balance_test.dart`*, `privacy_test.dart`, `seed_color_test.dart`, `theme_persistence_test.dart` | retos de la Sesión 1 (privacidad, color semilla, persistencia del tema) |
 
 \* La prueba del saldo de la Sesión 1 se reemplazó por `movements_bloc_test.dart`,
