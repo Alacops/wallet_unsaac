@@ -14,10 +14,10 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'REEMPLAZAR_API_KEY',
-    appId: 'REEMPLAZAR_APP_ID',
-    messagingSenderId: 'REEMPLAZAR_MESSAGING_SENDER_ID',
-    projectId: 'REEMPLAZAR_PROJECT_ID',
-    storageBucket: 'REEMPLAZAR_PROJECT_ID.firebasestorage.app',
+    apiKey: 'AIzaSyAqdsm_1oE_HABn6Ew6D1DpsHnBZkyKRnI',
+    appId: '1:664747208936:android:26f9adc47a4a7e7d3d995d',
+    messagingSenderId: '664747208936',
+    projectId: 'wallet-unsaac-alain',
+    storageBucket: 'wallet-unsaac-alain.firebasestorage.app',
   );
 }
