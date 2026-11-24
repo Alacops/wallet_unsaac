@@ -16,6 +16,11 @@ abstract interface class WalletRepository {
   /// Registra un movimiento y devuelve el resumen resultante.
   Future<WalletSummary> addMovement(Movement movement);
 
+  /// Reemplaza un movimiento existente por su versión editada, sin cambiar su
+  /// posición, y devuelve el resumen resultante (Reto 1). Si el identificador
+  /// no existe, la operación no falla: es idempotente.
+  Future<WalletSummary> updateMovement(Movement movement);
+
   /// Elimina el movimiento indicado y devuelve el resumen resultante.
   ///
   /// Si el identificador no existe, la operación no falla: es idempotente.

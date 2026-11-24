@@ -26,6 +26,10 @@ class _FailingRepository implements WalletRepository {
       throw Exception('sin conexión');
 
   @override
+  Future<WalletSummary> updateMovement(Movement movement) async =>
+      throw Exception('sin conexión');
+
+  @override
   Future<WalletSummary> removeMovement(String movementId) async =>
       throw Exception('sin conexión');
 

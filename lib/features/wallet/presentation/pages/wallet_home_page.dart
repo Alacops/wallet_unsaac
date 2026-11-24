@@ -170,6 +170,19 @@ class _SummaryView extends StatelessWidget {
     context.read<MovementsBloc>().add(MovementAdded(movement));
   }
 
+  /// Abre un formulario mínimo (título y monto) para editar el movimiento y,
+  /// si el usuario guarda, envía [MovementUpdated] con el mismo id (Reto 1).
+  Future<void> _editMovement(BuildContext context, Movement movement) async {
+    final bloc = context.read<MovementsBloc>();
+    final edited = await showDialog<Movement>(
+      context: context,
+      builder: (_) => _EditMovementDialog(movement: movement),
+    );
+    if (edited != null) {
+      bloc.add(MovementUpdated(edited));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -246,6 +259,7 @@ class _SummaryView extends StatelessWidget {
                   MovementTile(
                     movement: movement,
                     hideAmount: privacy.hidden,
+                    onEdit: () => _editMovement(context, movement),
                     onDelete: () => context
                         .read<MovementsBloc>()
                         .add(MovementRemoved(movement.id)),
@@ -332,6 +346,99 @@ class _AcademicFooter extends StatelessWidget {
           style: style?.copyWith(fontWeight: FontWeight.w600),
           textAlign: TextAlign.center,
         ),
+      ],
+    );
+  }
+}
+
+/// Formulario mínimo para editar un movimiento (Reto 1). Solo permite cambiar
+/// el título y el monto; el identificador, el tipo y la fecha no se tocan, de
+/// modo que `copyWith` nunca cambia el id.
+class _EditMovementDialog extends StatefulWidget {
+  const _EditMovementDialog({required this.movement});
+
+  final Movement movement;
+
+  @override
+  State<_EditMovementDialog> createState() => _EditMovementDialogState();
+}
+
+class _EditMovementDialogState extends State<_EditMovementDialog> {
+  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _titleController;
+  late final TextEditingController _amountController;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.movement.title);
+    _amountController = TextEditingController(
+      text: widget.movement.amount.toStringAsFixed(2),
+    );
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    final amount = double.parse(_amountController.text.replaceAll(',', '.'));
+    Navigator.of(context).pop(
+      widget.movement.copyWith(
+        title: _titleController.text.trim(),
+        amount: amount,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Editar movimiento'),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _titleController,
+              decoration: const InputDecoration(labelText: 'Título'),
+              textInputAction: TextInputAction.next,
+              validator: (value) => (value == null || value.trim().isEmpty)
+                  ? 'Escribe un título'
+                  : null,
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _amountController,
+              decoration: const InputDecoration(
+                labelText: 'Monto',
+                prefixText: 'S/ ',
+              ),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              validator: (value) {
+                final parsed =
+                    double.tryParse((value ?? '').replaceAll(',', '.'));
+                if (parsed == null || parsed <= 0) {
+                  return 'Escribe un monto válido';
+                }
+                return null;
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancelar'),
+        ),
+        FilledButton(onPressed: _save, child: const Text('Guardar')),
       ],
     );
   }

@@ -12,11 +12,13 @@ class MovementTile extends StatelessWidget {
     super.key,
     required this.movement,
     this.hideAmount = false,
+    this.onEdit,
     this.onDelete,
   });
 
   final Movement movement;
   final bool hideAmount;
+  final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
   static const Color _incomeLight = Color(0xFF2E7D32);
@@ -66,6 +68,13 @@ class MovementTile extends StatelessWidget {
               trailing,
               style: TextStyle(color: accent, fontWeight: FontWeight.w600),
             ),
+            if (onEdit != null)
+              IconButton(
+                tooltip: 'Editar movimiento',
+                onPressed: onEdit,
+                visualDensity: VisualDensity.compact,
+                icon: const Icon(Icons.edit_outlined, size: 20),
+              ),
             if (onDelete != null)
               IconButton(
                 tooltip: 'Eliminar movimiento',

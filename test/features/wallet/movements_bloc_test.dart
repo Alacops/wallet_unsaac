@@ -61,6 +61,11 @@ class _FailingRepository implements WalletRepository {
   }
 
   @override
+  Future<WalletSummary> updateMovement(Movement movement) async {
+    throw Exception('Servicio no disponible');
+  }
+
+  @override
   Future<WalletSummary> removeMovement(String movementId) async {
     throw Exception('Servicio no disponible');
   }
@@ -95,6 +100,18 @@ void main() {
       act: (bloc) => bloc.add(MovementAdded(_newMovement)),
       expect: () => [
         MovementsReady(WalletSummary(movements: [..._seed, _newMovement])),
+      ],
+    );
+
+    blocTest<MovementsBloc, MovementsState>(
+      'edita un movimiento conservando su posición y recalcula el saldo (Reto 1)',
+      build: _buildBloc,
+      act: (bloc) =>
+          bloc.add(MovementUpdated(_income.copyWith(amount: 1500))),
+      expect: () => [
+        MovementsReady(
+          WalletSummary(movements: [_income.copyWith(amount: 1500), _expense]),
+        ),
       ],
     );
 

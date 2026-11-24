@@ -28,6 +28,17 @@ final class MovementAdded extends MovementsEvent {
   List<Object?> get props => [movement];
 }
 
+/// Pide reemplazar un movimiento existente por su versión editada.
+/// El [movement] conserva el mismo identificador (Reto 1).
+final class MovementUpdated extends MovementsEvent {
+  const MovementUpdated(this.movement);
+
+  final Movement movement;
+
+  @override
+  List<Object?> get props => [movement];
+}
+
 /// Pide eliminar el movimiento con [movementId].
 final class MovementRemoved extends MovementsEvent {
   const MovementRemoved(this.movementId);

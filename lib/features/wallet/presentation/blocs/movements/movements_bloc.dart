@@ -13,6 +13,7 @@ class MovementsBloc extends Bloc<MovementsEvent, MovementsState> {
   MovementsBloc({required this.repository}) : super(const MovementsInitial()) {
     on<MovementsStarted>(_onStarted);
     on<MovementAdded>(_onAdded);
+    on<MovementUpdated>(_onUpdated);
     on<MovementRemoved>(_onRemoved);
     on<MovementsCleared>(_onCleared);
   }
@@ -24,6 +25,8 @@ class MovementsBloc extends Bloc<MovementsEvent, MovementsState> {
   static const String loadFailureMessage =
       'No se pudieron cargar los movimientos.';
   static const String addFailureMessage = 'No se pudo registrar el movimiento.';
+  static const String updateFailureMessage =
+      'No se pudo actualizar el movimiento.';
   static const String removeFailureMessage =
       'No se pudo eliminar el movimiento.';
   static const String clearFailureMessage = 'No se pudo vaciar el historial.';
@@ -42,6 +45,14 @@ class MovementsBloc extends Bloc<MovementsEvent, MovementsState> {
       emit,
       addFailureMessage,
       () => repository.addMovement(event.movement),
+    );
+  }
+
+  Future<void> _onUpdated(MovementUpdated event, Emitter<MovementsState> emit) {
+    return _execute(
+      emit,
+      updateFailureMessage,
+      () => repository.updateMovement(event.movement),
     );
   }
 

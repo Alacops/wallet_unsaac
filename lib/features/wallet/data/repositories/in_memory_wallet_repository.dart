@@ -34,6 +34,16 @@ class InMemoryWalletRepository implements WalletRepository {
   }
 
   @override
+  Future<WalletSummary> updateMovement(Movement movement) async {
+    await _simulateNetwork();
+    final index = _movements.indexWhere((item) => item.id == movement.id);
+    if (index != -1) {
+      _movements[index] = movement;
+    }
+    return _snapshot();
+  }
+
+  @override
   Future<WalletSummary> removeMovement(String movementId) async {
     await _simulateNetwork();
     _movements.removeWhere((movement) => movement.id == movementId);
