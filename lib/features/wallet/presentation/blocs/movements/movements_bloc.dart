@@ -99,7 +99,15 @@ class MovementsBloc extends Bloc<MovementsEvent, MovementsState> {
       emit(MovementsReady(summary));
     } on Exception {
       if (emit.isDone) return;
-      emit(MovementsFailure(failureMessage));
+      // Reto 3: si ya hay una lista visible, el error no la reemplaza: se
+      // conserva el resumen y se adjunta un mensaje transitorio para el
+      // SnackBar. Solo el fallo de carga inicial llega a MovementsFailure.
+      final current = state;
+      if (current is MovementsReady) {
+        emit(current.copyWith(isSaving: false, errorMessage: failureMessage));
+      } else {
+        emit(MovementsFailure(failureMessage));
+      }
     }
   }
 }

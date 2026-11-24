@@ -38,6 +38,41 @@ class _FailingRepository implements WalletRepository {
       throw Exception('sin conexión');
 }
 
+/// Repositorio que carga bien pero falla al agregar, para comprobar que el
+/// fallo de alta muestra un SnackBar y conserva la lista (Reto 3).
+class _AddFailingRepository implements WalletRepository {
+  final List<Movement> _movements = <Movement>[
+    Movement(
+      id: 'tx-001',
+      title: 'Sueldo de prácticas',
+      category: 'Trabajo',
+      amount: 1200,
+      type: MovementType.income,
+      date: DateTime(2026, 11, 2),
+    ),
+  ];
+
+  @override
+  Future<WalletSummary> loadSummary() async =>
+      WalletSummary(movements: List<Movement>.unmodifiable(_movements));
+
+  @override
+  Future<WalletSummary> addMovement(Movement movement) async =>
+      throw Exception('sin conexión');
+
+  @override
+  Future<WalletSummary> updateMovement(Movement movement) async =>
+      throw Exception('sin conexión');
+
+  @override
+  Future<WalletSummary> removeMovement(String movementId) async =>
+      throw Exception('sin conexión');
+
+  @override
+  Future<WalletSummary> clearMovements() async =>
+      throw Exception('sin conexión');
+}
+
 Future<void> _pumpHome(
   WidgetTester tester, {
   WalletRepository? repository,
@@ -116,5 +151,21 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Reintentar'), findsOneWidget);
+  });
+
+  testWidgets('fallo de alta muestra SnackBar y conserva la lista (Reto 3)',
+      (tester) async {
+    await _pumpHome(tester, repository: _AddFailingRepository());
+    await tester.pump(); // procesa la carga inicial exitosa
+
+    expect(find.text('Últimos movimientos'), findsOneWidget);
+
+    await tester.tap(find.text('Ingreso'));
+    await tester.pump(); // procesa el fallo de alta y el SnackBar
+
+    expect(find.text(MovementsBloc.addFailureMessage), findsOneWidget);
+    // La lista no se reemplaza por la vista de error de carga.
+    expect(find.text('Últimos movimientos'), findsOneWidget);
+    expect(find.text(MovementsBloc.loadFailureMessage), findsNothing);
   });
 }

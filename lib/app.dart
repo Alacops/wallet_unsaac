@@ -19,15 +19,21 @@ class WalletApp extends StatelessWidget {
     super.key,
     required this.firebaseStatus,
     required this.themePreferences,
+    this.repository,
   });
 
   final FirebaseStatus firebaseStatus;
   final ThemePreferences themePreferences;
 
+  /// Permite inyectar un repositorio distinto (por ejemplo, uno que falla) para
+  /// probar los estados de error sin Firebase (Reto 3). En producción se usa la
+  /// implementación en memoria.
+  final WalletRepository? repository;
+
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider<WalletRepository>(
-      create: (_) => InMemoryWalletRepository(),
+      create: (_) => repository ?? InMemoryWalletRepository(),
       child: MultiBlocProvider(
         providers: [
           BlocProvider<ThemeCubit>(

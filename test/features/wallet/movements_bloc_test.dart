@@ -171,6 +171,20 @@ void main() {
     );
 
     blocTest<MovementsBloc, MovementsState>(
+      'un fallo de alta sobre una lista visible la conserva con mensaje (Reto 3)',
+      build: () => MovementsBloc(repository: _FailingRepository()),
+      seed: () => MovementsReady(WalletSummary(movements: _seed)),
+      act: (bloc) => bloc.add(MovementAdded(_newMovement)),
+      expect: () => [
+        MovementsReady(WalletSummary(movements: _seed), isSaving: true),
+        MovementsReady(
+          WalletSummary(movements: _seed),
+          errorMessage: MovementsBloc.addFailureMessage,
+        ),
+      ],
+    );
+
+    blocTest<MovementsBloc, MovementsState>(
       'emite error cuando falla la eliminación',
       build: () => MovementsBloc(repository: _FailingRepository()),
       act: (bloc) => bloc.add(const MovementRemoved('tx-001')),

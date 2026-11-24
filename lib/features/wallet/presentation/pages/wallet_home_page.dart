@@ -50,24 +50,49 @@ class WalletHomePage extends StatelessWidget {
           SizedBox(width: 8),
         ],
       ),
-      body: BlocBuilder<MovementsBloc, MovementsState>(
-        builder: (context, state) {
-          return switch (state) {
-            MovementsInitial() ||
-            MovementsLoading() =>
-              const Center(child: CircularProgressIndicator()),
-            MovementsFailure(:final message) => _ErrorView(
-                message: message,
-                onRetry: () =>
-                    context.read<MovementsBloc>().add(const MovementsStarted()),
+      body: BlocListener<MovementsBloc, MovementsState>(
+        // Reto 3: solo reacciona a un error nuevo sobre una lista visible.
+        listenWhen: (previous, current) =>
+            current is MovementsReady &&
+            current.errorMessage != null &&
+            (previous is! MovementsReady ||
+                previous.errorMessage != current.errorMessage),
+        listener: (context, state) {
+          final message = (state as MovementsReady).errorMessage!;
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(message),
+                action: SnackBarAction(
+                  label: 'Reintentar',
+                  onPressed: () => context
+                      .read<MovementsBloc>()
+                      .add(const MovementsStarted()),
+                ),
               ),
-            MovementsReady(:final summary, :final isSaving) => _SummaryView(
-                summary: summary,
-                isSaving: isSaving,
-                firebaseStatus: firebaseStatus,
-              ),
-          };
+            );
         },
+        child: BlocBuilder<MovementsBloc, MovementsState>(
+          builder: (context, state) {
+            return switch (state) {
+              MovementsInitial() ||
+              MovementsLoading() =>
+                const Center(child: CircularProgressIndicator()),
+              MovementsFailure(:final message) => _ErrorView(
+                  message: message,
+                  onRetry: () => context
+                      .read<MovementsBloc>()
+                      .add(const MovementsStarted()),
+                ),
+              MovementsReady(:final summary, :final isSaving) => _SummaryView(
+                  summary: summary,
+                  isSaving: isSaving,
+                  firebaseStatus: firebaseStatus,
+                ),
+            };
+          },
+        ),
       ),
     );
   }

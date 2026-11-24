@@ -28,21 +28,35 @@ final class MovementsLoading extends MovementsState {
 ///
 /// [isSaving] es verdadero mientras una operación de guardado está en curso: la
 /// lista sigue visible y la interfaz muestra un indicador lineal (Reto 2).
+///
+/// [errorMessage] es un mensaje transitorio cuando falla una operación de alta,
+/// edición o baja: la lista se conserva y la pantalla muestra un `SnackBar` en
+/// vez de reemplazar todo el contenido por una vista de error (Reto 3).
 final class MovementsReady extends MovementsState {
-  const MovementsReady(this.summary, {this.isSaving = false});
+  const MovementsReady(
+    this.summary, {
+    this.isSaving = false,
+    this.errorMessage,
+  });
 
   final WalletSummary summary;
   final bool isSaving;
+  final String? errorMessage;
 
-  MovementsReady copyWith({WalletSummary? summary, bool? isSaving}) {
+  MovementsReady copyWith({
+    WalletSummary? summary,
+    bool? isSaving,
+    String? errorMessage,
+  }) {
     return MovementsReady(
       summary ?? this.summary,
       isSaving: isSaving ?? this.isSaving,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [summary, isSaving];
+  List<Object?> get props => [summary, isSaving, errorMessage];
 }
 
 /// La última operación falló; [message] es apto para mostrarse al usuario.
