@@ -184,5 +184,20 @@ void main() {
       act: (bloc) => bloc.add(const AuthDisplayNameUpdated('   ')),
       expect: () => <AuthState>[],
     );
+
+    blocTest<AuthBloc, AuthState>(
+      'una sesión expirada se distingue de un cierre voluntario (Reto 3)',
+      build: () => AuthBloc(
+        repository: FakeAuthRepository(
+          stream: Stream<AuthUser?>.fromIterable([_user, null]),
+        ),
+      ),
+      act: (bloc) => bloc.add(const AuthStarted()),
+      expect: () => [
+        const AuthLoading(),
+        const AuthAuthenticated(_user),
+        const AuthUnauthenticated(message: AuthMessages.sessionExpired),
+      ],
+    );
   });
 }

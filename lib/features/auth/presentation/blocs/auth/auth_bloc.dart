@@ -149,9 +149,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   AuthState _stateForUser(AuthUser? user) {
-    return user == null
-        ? const AuthUnauthenticated()
-        : AuthAuthenticated(user);
+    if (user != null) return AuthAuthenticated(user);
+    // Reto 3: si había una sesión activa y el stream emite `null` sin un cierre
+    // voluntario (que pasa por AuthLoading), la sesión expiró.
+    if (state is AuthAuthenticated) {
+      return const AuthUnauthenticated(message: AuthMessages.sessionExpired);
+    }
+    return const AuthUnauthenticated();
   }
 
   void _restoreAfterLogoutFailure(

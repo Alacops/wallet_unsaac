@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -131,5 +133,32 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Las contraseñas no coinciden.'), findsOneWidget);
+  });
+
+  testWidgets('una sesión expirada avisa y vuelve al login (Reto 3)',
+      (tester) async {
+    final controller = StreamController<AuthUser?>.broadcast();
+    addTearDown(controller.close);
+    final repository = FakeAuthRepository(stream: controller.stream);
+
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    final prefs = await ThemePreferences.create();
+    await tester.pumpWidget(
+      WalletApp(
+        firebaseStatus: const FirebaseStatus.notConfigured(),
+        themePreferences: prefs,
+        authRepository: repository,
+      ),
+    );
+    await tester.pump();
+
+    controller.add(_user);
+    await tester.pumpAndSettle();
+    expect(find.text('Saldo disponible'), findsOneWidget);
+
+    controller.add(null);
+    await tester.pumpAndSettle();
+    expect(find.text(AuthMessages.sessionExpired), findsOneWidget);
+    expect(find.text('Inicia sesión'), findsOneWidget);
   });
 }

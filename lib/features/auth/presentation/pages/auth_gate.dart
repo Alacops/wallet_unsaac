@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet_unsaac/core/config/firebase_status.dart';
+import 'package:wallet_unsaac/features/auth/domain/failures/auth_failure.dart';
 import 'package:wallet_unsaac/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:wallet_unsaac/features/auth/presentation/blocs/auth/auth_state.dart';
 import 'package:wallet_unsaac/features/auth/presentation/pages/login_page.dart';
@@ -32,9 +33,21 @@ class AuthGate extends StatelessWidget {
       listener: (context, state) {
         final message = _messageOf(state);
         if (message == null) return;
+        // Reto 3: la expiración ofrece volver a iniciar sesión.
+        final isExpired = message == AuthMessages.sessionExpired;
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(message)));
+          ..showSnackBar(
+            SnackBar(
+              content: Text(message),
+              action: isExpired
+                  ? SnackBarAction(
+                      label: 'Volver a iniciar sesión',
+                      onPressed: () {},
+                    )
+                  : null,
+            ),
+          );
       },
       child: BlocBuilder<AuthBloc, AuthState>(
         buildWhen: (previous, current) => current is! AuthLoading,

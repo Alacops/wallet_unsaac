@@ -44,6 +44,12 @@ abstract final class AuthMessages {
   static const String unknown =
       'Ocurrió un error inesperado. Inténtalo de nuevo.';
 
+  /// Mensaje de expiración de sesión (Reto 3). No corresponde a un código de
+  /// Firebase: lo produce la app cuando la sesión desaparece sin un cierre
+  /// voluntario.
+  static const String sessionExpired =
+      'Tu sesión expiró. Vuelve a iniciar sesión.';
+
   static String forReason(AuthFailureReason reason) => switch (reason) {
         AuthFailureReason.invalidEmail => invalidEmail,
         AuthFailureReason.invalidCredentials => invalidCredentials,
