@@ -6,6 +6,7 @@ import 'package:wallet_unsaac/core/theme/theme_cubit.dart';
 import 'package:wallet_unsaac/core/theme/theme_state.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/wallet_summary.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movement_filter.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_bloc.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_event.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_state.dart';
@@ -74,6 +75,17 @@ class WalletHomePage extends StatelessWidget {
             );
         },
         child: BlocBuilder<MovementsBloc, MovementsState>(
+          // Reto 4: un cambio de solo-filtro no reconstruye la pantalla. La
+          // tarjeta de saldo y las acciones no dependen del filtro; el
+          // BlocSelector interno reconstruye únicamente la lista.
+          buildWhen: (previous, current) {
+            if (previous is MovementsReady && current is MovementsReady) {
+              return previous.summary != current.summary ||
+                  previous.isSaving != current.isSaving ||
+                  previous.errorMessage != current.errorMessage;
+            }
+            return true;
+          },
           builder: (context, state) {
             return switch (state) {
               MovementsInitial() ||
@@ -301,21 +313,65 @@ class _SummaryView extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 4),
-              if (summary.isEmpty)
-                const _EmptyMovements()
-              else
-                for (final movement in summary.movements) ...[
-                  MovementTile(
-                    movement: movement,
-                    hideAmount: privacy.hidden,
-                    onEdit: () => _editMovement(context, movement),
-                    onDelete: () => context
-                        .read<MovementsBloc>()
-                        .add(MovementRemoved(movement.id)),
-                  ),
-                  const SizedBox(height: 10),
-                ],
+              const SizedBox(height: 12),
+              // Reto 4: solo esta región se reconstruye al cambiar el filtro.
+              BlocSelector<MovementsBloc, MovementsState, MovementFilter>(
+                selector: (state) =>
+                    state is MovementsReady ? state.filter : MovementFilter.all,
+                builder: (context, filter) {
+                  final visible = switch (filter) {
+                    MovementFilter.all => summary.movements,
+                    MovementFilter.income => summary.movements
+                        .where((movement) => movement.isIncome)
+                        .toList(),
+                    MovementFilter.expense => summary.movements
+                        .where((movement) => !movement.isIncome)
+                        .toList(),
+                  };
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SegmentedButton<MovementFilter>(
+                        segments: const [
+                          ButtonSegment(
+                            value: MovementFilter.all,
+                            label: Text('Todos'),
+                          ),
+                          ButtonSegment(
+                            value: MovementFilter.income,
+                            label: Text('Ingresos'),
+                          ),
+                          ButtonSegment(
+                            value: MovementFilter.expense,
+                            label: Text('Egresos'),
+                          ),
+                        ],
+                        selected: {filter},
+                        onSelectionChanged: (selection) => context
+                            .read<MovementsBloc>()
+                            .add(MovementsFilterChanged(selection.first)),
+                      ),
+                      const SizedBox(height: 12),
+                      if (summary.isEmpty)
+                        const _EmptyMovements()
+                      else if (visible.isEmpty)
+                        const _NoMovementsForFilter()
+                      else
+                        for (final movement in visible) ...[
+                          MovementTile(
+                            movement: movement,
+                            hideAmount: privacy.hidden,
+                            onEdit: () => _editMovement(context, movement),
+                            onDelete: () => context
+                                .read<MovementsBloc>()
+                                .add(MovementRemoved(movement.id)),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                    ],
+                  );
+                },
+              ),
               const SizedBox(height: 16),
               const SeedColorSelector(),
               const SizedBox(height: 20),
@@ -490,6 +546,33 @@ class _EditMovementDialogState extends State<_EditMovementDialog> {
         ),
         FilledButton(onPressed: _save, child: const Text('Guardar')),
       ],
+    );
+  }
+}
+
+/// Mensaje cuando el filtro activo no tiene movimientos, pero sí hay otros
+/// (Reto 4). Distinto del historial totalmente vacío.
+class _NoMovementsForFilter extends StatelessWidget {
+  const _NoMovementsForFilter();
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            Icon(
+              Icons.filter_alt_off_outlined,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Text('No hay movimientos de este tipo.'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

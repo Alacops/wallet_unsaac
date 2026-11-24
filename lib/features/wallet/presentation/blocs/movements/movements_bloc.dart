@@ -16,6 +16,7 @@ class MovementsBloc extends Bloc<MovementsEvent, MovementsState> {
     on<MovementUpdated>(_onUpdated);
     on<MovementRemoved>(_onRemoved);
     on<MovementsCleared>(_onCleared);
+    on<MovementsFilterChanged>(_onFilterChanged);
   }
 
   final WalletRepository repository;
@@ -78,6 +79,17 @@ class MovementsBloc extends Bloc<MovementsEvent, MovementsState> {
     Emitter<MovementsState> emit,
   ) {
     return _execute(emit, clearFailureMessage, repository.clearMovements);
+  }
+
+  /// Reto 4: el filtro solo cambia la vista. Si no hay lista visible, se ignora.
+  void _onFilterChanged(
+    MovementsFilterChanged event,
+    Emitter<MovementsState> emit,
+  ) {
+    final current = state;
+    if (current is MovementsReady) {
+      emit(current.copyWith(filter: event.filter));
+    }
   }
 
   /// Patrón común de las cuatro operaciones: ejecutar, emitir el resumen o

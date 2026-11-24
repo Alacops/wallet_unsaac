@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/wallet_summary.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movement_filter.dart';
 
 /// Estados que el [MovementsBloc] puede emitir.
 ///
@@ -37,26 +39,40 @@ final class MovementsReady extends MovementsState {
     this.summary, {
     this.isSaving = false,
     this.errorMessage,
+    this.filter = MovementFilter.all,
   });
 
   final WalletSummary summary;
   final bool isSaving;
   final String? errorMessage;
+  final MovementFilter filter;
+
+  /// Movimientos que se muestran según el [filter]. El resumen y el saldo se
+  /// calculan siempre sobre todos los movimientos (Reto 4).
+  List<Movement> get visibleMovements => switch (filter) {
+        MovementFilter.all => summary.movements,
+        MovementFilter.income =>
+          summary.movements.where((movement) => movement.isIncome).toList(),
+        MovementFilter.expense =>
+          summary.movements.where((movement) => !movement.isIncome).toList(),
+      };
 
   MovementsReady copyWith({
     WalletSummary? summary,
     bool? isSaving,
     String? errorMessage,
+    MovementFilter? filter,
   }) {
     return MovementsReady(
       summary ?? this.summary,
       isSaving: isSaving ?? this.isSaving,
       errorMessage: errorMessage ?? this.errorMessage,
+      filter: filter ?? this.filter,
     );
   }
 
   @override
-  List<Object?> get props => [summary, isSaving, errorMessage];
+  List<Object?> get props => [summary, isSaving, errorMessage, filter];
 }
 
 /// La última operación falló; [message] es apto para mostrarse al usuario.

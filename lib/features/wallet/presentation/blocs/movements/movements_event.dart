@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movement_filter.dart';
 
 /// Intenciones que la interfaz puede enviar al [MovementsBloc].
 ///
@@ -52,4 +53,15 @@ final class MovementRemoved extends MovementsEvent {
 /// Pide vaciar el historial de movimientos.
 final class MovementsCleared extends MovementsEvent {
   const MovementsCleared();
+}
+
+/// Pide cambiar el filtro de la lista por tipo (Reto 4). No toca el repositorio:
+/// solo cambia qué movimientos se muestran.
+final class MovementsFilterChanged extends MovementsEvent {
+  const MovementsFilterChanged(this.filter);
+
+  final MovementFilter filter;
+
+  @override
+  List<Object?> get props => [filter];
 }

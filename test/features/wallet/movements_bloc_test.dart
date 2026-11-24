@@ -4,6 +4,7 @@ import 'package:wallet_unsaac/features/wallet/data/repositories/in_memory_wallet
 import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/wallet_summary.dart';
 import 'package:wallet_unsaac/features/wallet/domain/repositories/wallet_repository.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movement_filter.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_bloc.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_event.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_state.dart';
@@ -150,6 +151,53 @@ void main() {
       build: _buildBloc,
       act: (bloc) => bloc.add(const MovementsCleared()),
       expect: () => [const MovementsReady(WalletSummary(movements: []))],
+    );
+
+    blocTest<MovementsBloc, MovementsState>(
+      'filtra ingresos sin cambiar el resumen ni el saldo (Reto 4)',
+      build: _buildBloc,
+      seed: () => MovementsReady(WalletSummary(movements: _seed)),
+      act: (bloc) =>
+          bloc.add(const MovementsFilterChanged(MovementFilter.income)),
+      expect: () => [
+        MovementsReady(
+          WalletSummary(movements: _seed),
+          filter: MovementFilter.income,
+        ),
+      ],
+      verify: (bloc) {
+        final state = bloc.state as MovementsReady;
+        expect(state.visibleMovements, [_income]);
+        expect(state.summary.balance, closeTo(1152, 0.001));
+      },
+    );
+
+    blocTest<MovementsBloc, MovementsState>(
+      'filtra egresos y muestra solo los gastos (Reto 4)',
+      build: _buildBloc,
+      seed: () => MovementsReady(WalletSummary(movements: _seed)),
+      act: (bloc) =>
+          bloc.add(const MovementsFilterChanged(MovementFilter.expense)),
+      verify: (bloc) {
+        final state = bloc.state as MovementsReady;
+        expect(state.filter, MovementFilter.expense);
+        expect(state.visibleMovements, [_expense]);
+      },
+    );
+
+    blocTest<MovementsBloc, MovementsState>(
+      'el filtro "todos" muestra la lista completa (Reto 4)',
+      build: _buildBloc,
+      seed: () => MovementsReady(
+        WalletSummary(movements: _seed),
+        filter: MovementFilter.income,
+      ),
+      act: (bloc) =>
+          bloc.add(const MovementsFilterChanged(MovementFilter.all)),
+      verify: (bloc) {
+        final state = bloc.state as MovementsReady;
+        expect(state.visibleMovements, _seed);
+      },
     );
 
     blocTest<MovementsBloc, MovementsState>(
