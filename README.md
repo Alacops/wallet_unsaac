@@ -21,7 +21,7 @@ Aplicativo de finanzas personales para Android del curso *Desarrollo de Software
 
 ```
 flutter analyze   →  No issues found!
-flutter test      →  +58: All tests passed!
+flutter test      →  +64: All tests passed!
 ```
 
 ## Entorno
@@ -40,7 +40,7 @@ y `bloc_test` (esta última en `dev_dependencies`).
 ```bash
 flutter pub get      # instalar dependencias
 flutter analyze      # análisis estático (debe salir "No issues found!")
-flutter test         # 39 pruebas (dominio, bloc, Cubits y widgets)
+flutter test         # 64 pruebas (dominio, blocs, Cubits y widgets)
 flutter run          # ejecutar en emulador o dispositivo Android
 ```
 
@@ -234,17 +234,30 @@ enumeran cuentas (recomendación de OWASP).
 - [x] `flutter analyze` y `flutter test` en verde.
 - [x] Sin contraseñas, tokens ni credenciales en el repositorio.
 
+### Retos de ampliación (Sesión 3)
+
+| Reto | Nivel | Qué agrega |
+|------|-------|-----------|
+| 1 · Recuperación de contraseña | Básico | `sendPasswordResetEmail` en el contrato y las dos implementaciones; evento `AuthPasswordResetRequested`; enlace «¿Olvidaste tu contraseña?». El mensaje es **genérico** (no revela si el correo existe) |
+| 2 · Perfil con nombre | Intermedio | `updateDisplayName` (el `uid` no cambia); evento `AuthDisplayNameUpdated`; botón de perfil con la inicial y un formulario para editar el nombre. Un nombre vacío se ignora |
+| 3 · Sesión expirada | Avanzado | `AuthMessages.sessionExpired`; `_stateForUser` distingue un **cierre voluntario** (pasa por `AuthLoading`) de una **expiración** (el stream emite `null` sobre una sesión activa); `SnackBar` con «Volver a iniciar sesión» |
+
+**¿Por qué no se guarda el token en la app?** Firebase Authentication conserva y
+restaura la sesión de forma segura en el dispositivo; duplicar el token en la app
+sería una segunda fuente de verdad que puede quedar desincronizada y amplía la
+superficie de ataque. La app solo observa `authStateChanges()`.
+
 ## Pruebas
 
-58 pruebas en `test/`:
+64 pruebas en `test/`:
 
 | Archivo | Qué verifica |
 |---------|--------------|
 | `movements_bloc_test.dart` | pruebas del bloc: estado inicial, alta, edición, baja, no-emisión, limpieza, guardado visible, filtro por tipo y caminos de error (lectura, alta, baja) |
 | `movements_state_test.dart` | 5 pruebas de igualdad por valor de entidades y estados |
 | `wallet_home_page_test.dart` | vistas de éxito, privacidad, error de carga y SnackBar de fallo de alta |
-| `auth/auth_bloc_test.dart` | 9 pruebas del `AuthBloc`: inicial, sesión persistida, acceso, error, registro y cierre (limpio y fallido) |
-| `auth/auth_widget_test.dart` | validación del formulario, acceso correcto abre la billetera, fallo muestra el mensaje y el registro exige confirmación |
+| `auth/auth_bloc_test.dart` | pruebas del `AuthBloc`: inicial, sesión persistida, acceso, error, registro, cierre (limpio y fallido) y los retos 1-3 (recuperación, perfil y expiración) |
+| `auth/auth_widget_test.dart` | validación del formulario, acceso correcto abre la billetera, fallo muestra el mensaje, el registro exige confirmación y la sesión expirada vuelve al login |
 | `auth/auth_validators_test.dart`, `auth/auth_error_mapper_test.dart` | validaciones de correo/contraseña y traducción de códigos de Firebase |
 | `privacy_test.dart`, `seed_color_test.dart`, `theme_persistence_test.dart` | retos de la Sesión 1 (privacidad, color semilla, persistencia del tema) |
 
