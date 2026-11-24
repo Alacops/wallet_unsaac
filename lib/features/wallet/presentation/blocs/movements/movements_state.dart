@@ -25,13 +25,24 @@ final class MovementsLoading extends MovementsState {
 }
 
 /// El resumen está disponible para pintarse.
+///
+/// [isSaving] es verdadero mientras una operación de guardado está en curso: la
+/// lista sigue visible y la interfaz muestra un indicador lineal (Reto 2).
 final class MovementsReady extends MovementsState {
-  const MovementsReady(this.summary);
+  const MovementsReady(this.summary, {this.isSaving = false});
 
   final WalletSummary summary;
+  final bool isSaving;
+
+  MovementsReady copyWith({WalletSummary? summary, bool? isSaving}) {
+    return MovementsReady(
+      summary ?? this.summary,
+      isSaving: isSaving ?? this.isSaving,
+    );
+  }
 
   @override
-  List<Object?> get props => [summary];
+  List<Object?> get props => [summary, isSaving];
 }
 
 /// La última operación falló; [message] es apto para mostrarse al usuario.

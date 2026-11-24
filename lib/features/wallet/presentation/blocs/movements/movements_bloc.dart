@@ -40,8 +40,17 @@ class MovementsBloc extends Bloc<MovementsEvent, MovementsState> {
     await _execute(emit, loadFailureMessage, repository.loadSummary);
   }
 
-  Future<void> _onAdded(MovementAdded event, Emitter<MovementsState> emit) {
-    return _execute(
+  Future<void> _onAdded(
+    MovementAdded event,
+    Emitter<MovementsState> emit,
+  ) async {
+    // Reto 2: si ya hay una lista visible, se marca el guardado en curso sin
+    // reemplazarla por un indicador de pantalla completa.
+    final current = state;
+    if (current is MovementsReady) {
+      emit(current.copyWith(isSaving: true));
+    }
+    await _execute(
       emit,
       addFailureMessage,
       () => repository.addMovement(event.movement),

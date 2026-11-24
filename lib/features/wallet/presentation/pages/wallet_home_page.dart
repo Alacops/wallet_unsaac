@@ -61,8 +61,9 @@ class WalletHomePage extends StatelessWidget {
                 onRetry: () =>
                     context.read<MovementsBloc>().add(const MovementsStarted()),
               ),
-            MovementsReady(:final summary) => _SummaryView(
+            MovementsReady(:final summary, :final isSaving) => _SummaryView(
                 summary: summary,
+                isSaving: isSaving,
                 firebaseStatus: firebaseStatus,
               ),
           };
@@ -148,9 +149,14 @@ class _ClearHistoryButton extends StatelessWidget {
 }
 
 class _SummaryView extends StatelessWidget {
-  const _SummaryView({required this.summary, required this.firebaseStatus});
+  const _SummaryView({
+    required this.summary,
+    required this.isSaving,
+    required this.firebaseStatus,
+  });
 
   final WalletSummary summary;
+  final bool isSaving;
   final FirebaseStatus firebaseStatus;
 
   /// Construye un movimiento de demostración con un identificador único y lo
@@ -243,12 +249,31 @@ class _SummaryView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Text(
-                    '${summary.movements.length} registros',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                  if (isSaving)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(
+                          width: 14,
+                          height: 14,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Guardando…',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    Text(
+                      '${summary.movements.length} registros',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
-                  ),
                 ],
               ),
               const SizedBox(height: 4),

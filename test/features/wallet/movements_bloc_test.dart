@@ -116,6 +116,19 @@ void main() {
     );
 
     blocTest<MovementsBloc, MovementsState>(
+      'al agregar sobre una lista visible marca isSaving y luego lo libera (Reto 2)',
+      build: _buildBloc,
+      seed: () => MovementsReady(WalletSummary(movements: _seed)),
+      act: (bloc) => bloc.add(MovementAdded(_newMovement)),
+      expect: () => [
+        MovementsReady(WalletSummary(movements: _seed), isSaving: true),
+        MovementsReady(
+          WalletSummary(movements: [..._seed, _newMovement]),
+        ),
+      ],
+    );
+
+    blocTest<MovementsBloc, MovementsState>(
       'emite el resumen sin el movimiento al eliminar',
       build: _buildBloc,
       act: (bloc) => bloc.add(const MovementRemoved('tx-001')),
