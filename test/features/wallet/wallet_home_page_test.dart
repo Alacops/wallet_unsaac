@@ -8,16 +8,30 @@ import 'package:wallet_unsaac/core/theme/theme_cubit.dart';
 import 'package:wallet_unsaac/core/theme/theme_preferences.dart';
 import 'package:wallet_unsaac/core/theme/theme_state.dart';
 import 'package:wallet_unsaac/features/wallet/data/repositories/in_memory_wallet_repository.dart';
+import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/wallet_summary.dart';
 import 'package:wallet_unsaac/features/wallet/domain/repositories/wallet_repository.dart';
-import 'package:wallet_unsaac/features/wallet/presentation/cubits/balance_cubit.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_bloc.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_event.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/cubits/privacy_cubit.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/pages/wallet_home_page.dart';
 
-/// Repositorio que falla, para comprobar la vista de error (Reto 3).
+/// Repositorio que falla, para comprobar la vista de error.
 class _FailingRepository implements WalletRepository {
   @override
   Future<WalletSummary> loadSummary() async => throw Exception('sin conexión');
+
+  @override
+  Future<WalletSummary> addMovement(Movement movement) async =>
+      throw Exception('sin conexión');
+
+  @override
+  Future<WalletSummary> removeMovement(String movementId) async =>
+      throw Exception('sin conexión');
+
+  @override
+  Future<WalletSummary> clearMovements() async =>
+      throw Exception('sin conexión');
 }
 
 Future<void> _pumpHome(
@@ -34,7 +48,10 @@ Future<void> _pumpHome(
       providers: [
         BlocProvider<ThemeCubit>(create: (_) => ThemeCubit(prefs)),
         BlocProvider<PrivacyCubit>(create: (_) => PrivacyCubit()),
-        BlocProvider<BalanceCubit>(create: (_) => BalanceCubit(repo)..load()),
+        BlocProvider<MovementsBloc>(
+          create: (_) =>
+              MovementsBloc(repository: repo)..add(const MovementsStarted()),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, state) => MaterialApp(
@@ -91,7 +108,7 @@ void main() {
     await tester.pump();
 
     expect(
-      find.text('No se pudo cargar el resumen de la billetera.'),
+      find.text(MovementsBloc.loadFailureMessage),
       findsOneWidget,
     );
     expect(find.text('Reintentar'), findsOneWidget);

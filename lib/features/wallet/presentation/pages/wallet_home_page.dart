@@ -4,9 +4,11 @@ import 'package:wallet_unsaac/core/config/app_profile.dart';
 import 'package:wallet_unsaac/core/config/firebase_status.dart';
 import 'package:wallet_unsaac/core/theme/theme_cubit.dart';
 import 'package:wallet_unsaac/core/theme/theme_state.dart';
+import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/wallet_summary.dart';
-import 'package:wallet_unsaac/features/wallet/presentation/cubits/balance_cubit.dart';
-import 'package:wallet_unsaac/features/wallet/presentation/cubits/balance_state.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_bloc.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_event.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_state.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/cubits/privacy_cubit.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/cubits/privacy_state.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/widgets/balance_card.dart';
@@ -16,11 +18,12 @@ import 'package:wallet_unsaac/features/wallet/presentation/widgets/movement_tile
 import 'package:wallet_unsaac/features/wallet/presentation/widgets/seed_color_selector.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/widgets/unsaac_logo.dart';
 
-/// Pantalla principal de Wallet UNSAAC (Sesión 1 + cuatro retos).
+/// Pantalla principal de Wallet UNSAAC.
 ///
-/// La carga la gobierna [BalanceCubit] (Reto 3); la privacidad, [PrivacyCubit]
-/// (Reto 2); el tema y el color semilla, [ThemeCubit] (Retos 1 y 4). La
-/// pantalla no calcula ni habla directamente con el repositorio.
+/// El flujo de movimientos lo gobierna [MovementsBloc]: la pantalla no calcula
+/// saldos ni habla directamente con el repositorio, solo envía eventos y pinta
+/// estados. La privacidad la gobierna [PrivacyCubit]; el tema y el color
+/// semilla, [ThemeCubit].
 class WalletHomePage extends StatelessWidget {
   const WalletHomePage({super.key, required this.firebaseStatus});
 
@@ -41,19 +44,24 @@ class WalletHomePage extends StatelessWidget {
             ),
           ],
         ),
-        actions: const [_ThemeModeButton(), SizedBox(width: 8)],
+        actions: const [
+          _ClearHistoryButton(),
+          _ThemeModeButton(),
+          SizedBox(width: 8),
+        ],
       ),
-      body: BlocBuilder<BalanceCubit, BalanceState>(
+      body: BlocBuilder<MovementsBloc, MovementsState>(
         builder: (context, state) {
           return switch (state) {
-            BalanceInitial() ||
-            BalanceLoading() =>
+            MovementsInitial() ||
+            MovementsLoading() =>
               const Center(child: CircularProgressIndicator()),
-            BalanceFailure(:final message) => _ErrorView(
+            MovementsFailure(:final message) => _ErrorView(
                 message: message,
-                onRetry: () => context.read<BalanceCubit>().load(),
+                onRetry: () =>
+                    context.read<MovementsBloc>().add(const MovementsStarted()),
               ),
-            BalanceSuccess(:final summary) => _SummaryView(
+            MovementsReady(:final summary) => _SummaryView(
                 summary: summary,
                 firebaseStatus: firebaseStatus,
               ),
@@ -64,8 +72,8 @@ class WalletHomePage extends StatelessWidget {
   }
 }
 
-/// Botón del AppBar que recorre claro → oscuro → sistema (Reto 1). El icono y
-/// el tooltip reflejan el modo actual.
+/// Botón del AppBar que recorre claro → oscuro → sistema. El icono y el
+/// tooltip reflejan el modo actual.
 class _ThemeModeButton extends StatelessWidget {
   const _ThemeModeButton();
 
@@ -97,21 +105,69 @@ class _ThemeModeButton extends StatelessWidget {
   }
 }
 
+/// Botón del AppBar que vacía el historial tras confirmar. Envía
+/// [MovementsCleared]; la decisión de borrar la toma el usuario en el diálogo.
+class _ClearHistoryButton extends StatelessWidget {
+  const _ClearHistoryButton();
+
+  Future<void> _confirmAndClear(BuildContext context) async {
+    final bloc = context.read<MovementsBloc>();
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Vaciar historial'),
+        content: const Text(
+          '¿Seguro que quieres eliminar todos los movimientos? '
+          'Esta acción no se puede deshacer.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Vaciar'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed ?? false) {
+      bloc.add(const MovementsCleared());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: 'Vaciar historial',
+      icon: const Icon(Icons.delete_sweep_outlined),
+      onPressed: () => _confirmAndClear(context),
+    );
+  }
+}
+
 class _SummaryView extends StatelessWidget {
   const _SummaryView({required this.summary, required this.firebaseStatus});
 
   final WalletSummary summary;
   final FirebaseStatus firebaseStatus;
 
-  void _showComingSoon(BuildContext context, String feature) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text('$feature se habilita en la Sesión 2.'),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+  /// Construye un movimiento de demostración con un identificador único y lo
+  /// envía al bloc con [MovementAdded]. En un producto real, el identificador
+  /// lo genera el backend o un UUID.
+  void _addDemoMovement(BuildContext context, MovementType type) {
+    final now = DateTime.now();
+    final isIncome = type == MovementType.income;
+    final movement = Movement(
+      id: 'tx-${now.microsecondsSinceEpoch}',
+      title: isIncome ? 'Ingreso de demostración' : 'Egreso de demostración',
+      category: isIncome ? 'Ingreso extra' : 'Alimentación',
+      amount: isIncome ? 150 : 25.50,
+      type: type,
+      date: now,
+    );
+    context.read<MovementsBloc>().add(MovementAdded(movement));
   }
 
   @override
@@ -120,7 +176,12 @@ class _SummaryView extends StatelessWidget {
     return BlocBuilder<PrivacyCubit, PrivacyState>(
       builder: (context, privacy) {
         return RefreshIndicator(
-          onRefresh: () => context.read<BalanceCubit>().load(),
+          onRefresh: () async {
+            final bloc = context.read<MovementsBloc>();
+            bloc.add(const MovementsStarted());
+            await bloc.stream
+                .firstWhere((state) => state is! MovementsLoading);
+          },
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
             children: [
@@ -142,7 +203,7 @@ class _SummaryView extends StatelessWidget {
                   Expanded(
                     child: FilledButton.tonalIcon(
                       onPressed: () =>
-                          _showComingSoon(context, 'Registrar ingreso'),
+                          _addDemoMovement(context, MovementType.income),
                       icon: const Icon(Icons.add_rounded),
                       label: const Text('Ingreso'),
                     ),
@@ -151,7 +212,7 @@ class _SummaryView extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () =>
-                          _showComingSoon(context, 'Registrar egreso'),
+                          _addDemoMovement(context, MovementType.expense),
                       icon: const Icon(Icons.remove_rounded),
                       label: const Text('Egreso'),
                     ),
@@ -169,10 +230,11 @@ class _SummaryView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () =>
-                        _showComingSoon(context, 'El historial completo'),
-                    child: const Text('Ver todos'),
+                  Text(
+                    '${summary.movements.length} registros',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -181,7 +243,13 @@ class _SummaryView extends StatelessWidget {
                 const _EmptyMovements()
               else
                 for (final movement in summary.movements) ...[
-                  MovementTile(movement: movement, hideAmount: privacy.hidden),
+                  MovementTile(
+                    movement: movement,
+                    hideAmount: privacy.hidden,
+                    onDelete: () => context
+                        .read<MovementsBloc>()
+                        .add(MovementRemoved(movement.id)),
+                  ),
                   const SizedBox(height: 10),
                 ],
               const SizedBox(height: 16),
@@ -198,7 +266,7 @@ class _SummaryView extends StatelessWidget {
   }
 }
 
-/// Vista de error con botón de reintento (Reto 3).
+/// Vista de error con botón de reintento.
 class _ErrorView extends StatelessWidget {
   const _ErrorView({required this.message, required this.onRetry});
 

@@ -50,6 +50,7 @@ app.*.map.json
 # Secretos de Firebase / firma Android (no versionar)
 **/google-services.json
 **/GoogleService-Info.plist
+**/serviceAccountKey.json
 android/key.properties
 **/*.jks
 **/*.keystore

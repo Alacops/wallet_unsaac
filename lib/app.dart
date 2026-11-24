@@ -7,7 +7,8 @@ import 'package:wallet_unsaac/core/theme/theme_preferences.dart';
 import 'package:wallet_unsaac/core/theme/theme_state.dart';
 import 'package:wallet_unsaac/features/wallet/data/repositories/in_memory_wallet_repository.dart';
 import 'package:wallet_unsaac/features/wallet/domain/repositories/wallet_repository.dart';
-import 'package:wallet_unsaac/features/wallet/presentation/cubits/balance_cubit.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_bloc.dart';
+import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movements_event.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/cubits/privacy_cubit.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/pages/wallet_home_page.dart';
 
@@ -35,9 +36,11 @@ class WalletApp extends StatelessWidget {
           BlocProvider<PrivacyCubit>(
             create: (_) => PrivacyCubit(),
           ),
-          BlocProvider<BalanceCubit>(
+          BlocProvider<MovementsBloc>(
+            lazy: false,
             create: (context) =>
-                BalanceCubit(context.read<WalletRepository>())..load(),
+                MovementsBloc(repository: context.read<WalletRepository>())
+                  ..add(const MovementsStarted()),
           ),
         ],
         child: BlocBuilder<ThemeCubit, ThemeState>(

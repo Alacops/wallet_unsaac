@@ -1,7 +1,15 @@
+import 'package:equatable/equatable.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
 
-/// Resumen de la billetera. El saldo se calcula aquí, no en la pantalla.
-class WalletSummary {
+/// Resumen financiero que consume la pantalla principal.
+///
+/// Los totales se calculan en el dominio, no en la interfaz: así la misma
+/// lógica sirve para la pantalla, las pruebas y, más adelante, Firestore.
+///
+/// [Equatable] compara la lista de movimientos por valor. Sin esta igualdad,
+/// dos resúmenes con el mismo contenido serían objetos distintos y el bloc
+/// emitiría estados redundantes.
+class WalletSummary extends Equatable {
   const WalletSummary({required this.movements});
 
   final List<Movement> movements;
@@ -17,4 +25,7 @@ class WalletSummary {
   double get balance => income - expenses;
 
   bool get isEmpty => movements.isEmpty;
+
+  @override
+  List<Object?> get props => [movements];
 }

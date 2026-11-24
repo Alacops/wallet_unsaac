@@ -2,24 +2,61 @@ import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/wallet_summary.dart';
 import 'package:wallet_unsaac/features/wallet/domain/repositories/wallet_repository.dart';
 
-/// Implementación en memoria del repositorio. Simula una latencia de red
-/// para poder mostrar el estado de carga.
+/// Implementación de demostración con datos en memoria.
+///
+/// Simula latencia de red para que la interfaz muestre un estado de carga real.
+/// No guarda cambios en disco: los datos se reinician al cerrar la aplicación.
+/// Esta clase es la única que conoce el almacenamiento; el bloc solo ve el
+/// contrato [WalletRepository].
 class InMemoryWalletRepository implements WalletRepository {
   InMemoryWalletRepository({
     this.latency = const Duration(milliseconds: 350),
     List<Movement>? movements,
-  }) : _movements = movements ?? _demoMovements;
+  }) : _movements = List<Movement>.of(movements ?? _demoMovements);
 
   final Duration latency;
+
+  /// Lista propia y mutable. Se copia la semilla para no modificar la lista
+  /// de demostración ni la que recibe una prueba.
   final List<Movement> _movements;
 
   @override
   Future<WalletSummary> loadSummary() async {
+    await _simulateNetwork();
+    return _snapshot();
+  }
+
+  @override
+  Future<WalletSummary> addMovement(Movement movement) async {
+    await _simulateNetwork();
+    _movements.add(movement);
+    return _snapshot();
+  }
+
+  @override
+  Future<WalletSummary> removeMovement(String movementId) async {
+    await _simulateNetwork();
+    _movements.removeWhere((movement) => movement.id == movementId);
+    return _snapshot();
+  }
+
+  @override
+  Future<WalletSummary> clearMovements() async {
+    await _simulateNetwork();
+    _movements.clear();
+    return _snapshot();
+  }
+
+  Future<void> _simulateNetwork() async {
     if (latency > Duration.zero) {
       await Future<void>.delayed(latency);
     }
-    return WalletSummary(movements: List<Movement>.unmodifiable(_movements));
   }
+
+  /// Entrega una vista inmutable: el bloc y la interfaz no pueden alterar la
+  /// lista interna del repositorio.
+  WalletSummary _snapshot() =>
+      WalletSummary(movements: List<Movement>.unmodifiable(_movements));
 
   static final List<Movement> _demoMovements = <Movement>[
     Movement(

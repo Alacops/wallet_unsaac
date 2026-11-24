@@ -4,16 +4,20 @@ import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
 
 /// Fila de un movimiento financiero.
 ///
-/// Reto 2: recibe [hideAmount]; cuando está activo enmascara el importe.
+/// Recibe [hideAmount]; cuando está activo enmascara el importe. Si se entrega
+/// [onDelete], muestra un botón para eliminar el movimiento. La fila no habla
+/// con el repositorio ni con el bloc: solo invoca el callback que recibe.
 class MovementTile extends StatelessWidget {
   const MovementTile({
     super.key,
     required this.movement,
     this.hideAmount = false,
+    this.onDelete,
   });
 
   final Movement movement;
   final bool hideAmount;
+  final VoidCallback? onDelete;
 
   static const Color _incomeLight = Color(0xFF2E7D32);
   static const Color _incomeDark = Color(0xFF81C784);
@@ -55,9 +59,21 @@ class MovementTile extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: Text(
-          trailing,
-          style: TextStyle(color: accent, fontWeight: FontWeight.w600),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              trailing,
+              style: TextStyle(color: accent, fontWeight: FontWeight.w600),
+            ),
+            if (onDelete != null)
+              IconButton(
+                tooltip: 'Eliminar movimiento',
+                onPressed: onDelete,
+                visualDensity: VisualDensity.compact,
+                icon: const Icon(Icons.delete_outline_rounded, size: 20),
+              ),
+          ],
         ),
       ),
     );
