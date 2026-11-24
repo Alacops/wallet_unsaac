@@ -91,6 +91,12 @@ class InMemoryAuthRepository implements AuthRepository {
     _changes.add(null);
   }
 
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    // Modo local: solo simula el envío. No revela si el correo existe.
+    await _simulateNetwork();
+  }
+
   String _normalize(String email) => email.trim().toLowerCase();
 
   Future<void> _simulateNetwork() async {

@@ -135,5 +135,31 @@ void main() {
         const AuthAuthenticated(_user, message: AuthMessages.network),
       ],
     );
+
+    blocTest<AuthBloc, AuthState>(
+      'la recuperación de contraseña emite un mensaje genérico (Reto 1)',
+      build: () => AuthBloc(repository: FakeAuthRepository()),
+      act: (bloc) =>
+          bloc.add(const AuthPasswordResetRequested('estudiante@unsaac.edu.pe')),
+      expect: () => [
+        const AuthUnauthenticated(message: AuthBloc.resetEmailSentMessage),
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'la recuperación genérica no revela si un correo existe (Reto 1)',
+      build: () => AuthBloc(
+        repository: FakeAuthRepository()
+          ..resetError = const AuthException(
+            AuthFailureReason.invalidCredentials,
+            AuthMessages.invalidCredentials,
+          ),
+      ),
+      act: (bloc) =>
+          bloc.add(const AuthPasswordResetRequested('ausente@unsaac.edu.pe')),
+      expect: () => [
+        const AuthUnauthenticated(message: AuthBloc.resetEmailSentMessage),
+      ],
+    );
   });
 }

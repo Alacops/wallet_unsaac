@@ -50,6 +50,24 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  /// Reto 1: valida solo el correo y pide el enlace de recuperación.
+  void _forgotPassword() {
+    if (AuthValidators.email(_email.text) != null) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('Ingresa tu correo para recuperar la contraseña.'),
+          ),
+        );
+      return;
+    }
+    FocusScope.of(context).unfocus();
+    context
+        .read<AuthBloc>()
+        .add(AuthPasswordResetRequested(_email.text.trim()));
+  }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -107,6 +125,14 @@ class _LoginPageState extends State<LoginPage> {
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
                 ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                key: const Key('login_forgot'),
+                onPressed: _forgotPassword,
+                child: const Text('¿Olvidaste tu contraseña?'),
               ),
             ),
             if (widget.showDemoHint) ...[

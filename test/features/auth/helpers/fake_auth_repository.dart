@@ -22,6 +22,8 @@ class FakeAuthRepository implements AuthRepository {
   AuthException? signInError;
   AuthException? registerError;
   AuthException? signOutError;
+  AuthException? resetError;
+  int resetCalls = 0;
 
   @override
   AuthUser? get currentUser => _currentUser;
@@ -57,5 +59,11 @@ class FakeAuthRepository implements AuthRepository {
   Future<void> signOut() async {
     if (signOutError != null) throw signOutError!;
     _currentUser = null;
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    resetCalls++;
+    if (resetError != null) throw resetError!;
   }
 }

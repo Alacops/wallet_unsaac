@@ -20,4 +20,7 @@ abstract interface class AuthRepository {
 
   /// Cierra la sesión actual.
   Future<void> signOut();
+
+  /// Envía un correo para restablecer la contraseña (Reto 1).
+  Future<void> sendPasswordResetEmail(String email);
 }

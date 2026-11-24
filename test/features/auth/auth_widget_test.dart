@@ -50,6 +50,8 @@ void main() {
 
     expect(find.text('Inicia sesión'), findsOneWidget);
 
+    await tester.ensureVisible(find.byKey(const Key('login_submit')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('login_submit')));
     await tester.pumpAndSettle();
 
@@ -68,6 +70,8 @@ void main() {
       find.byKey(const Key('login_password')),
       'wallet123',
     );
+    await tester.ensureVisible(find.byKey(const Key('login_submit')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('login_submit')));
     await tester.pumpAndSettle();
 
@@ -92,6 +96,8 @@ void main() {
       find.byKey(const Key('login_password')),
       'incorrecta',
     );
+    await tester.ensureVisible(find.byKey(const Key('login_submit')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('login_submit')));
     await tester.pumpAndSettle();
 

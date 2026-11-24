@@ -15,9 +15,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoginRequested>(_onLogin);
     on<AuthRegisterRequested>(_onRegister);
     on<AuthLogoutRequested>(_onLogout);
+    on<AuthPasswordResetRequested>(_onPasswordReset);
   }
 
   final AuthRepository repository;
+
+  /// Mensaje genérico de recuperación (Reto 1). No revela si el correo existe.
+  static const String resetEmailSentMessage =
+      'Si el correo está registrado, te enviamos un enlace para restablecer la '
+      'contraseña.';
 
   Future<void> _onStarted(AuthStarted event, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
@@ -94,6 +100,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       _restoreAfterLogoutFailure(emit, previous, error.message);
     } on Exception {
       _restoreAfterLogoutFailure(emit, previous, AuthMessages.unknown);
+    }
+  }
+
+  Future<void> _onPasswordReset(
+    AuthPasswordResetRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      await repository.sendPasswordResetEmail(event.email);
+      if (emit.isDone) return;
+      emit(const AuthUnauthenticated(message: resetEmailSentMessage));
+    } on AuthException catch (error) {
+      if (emit.isDone) return;
+      // Solo un fallo de red se distingue; los demás no revelan si el correo
+      // está registrado, para no enumerar cuentas.
+      final message = error.reason == AuthFailureReason.network
+          ? error.message
+          : resetEmailSentMessage;
+      emit(AuthUnauthenticated(message: message));
+    } on Exception {
+      if (emit.isDone) return;
+      emit(const AuthUnauthenticated(message: resetEmailSentMessage));
     }
   }
 

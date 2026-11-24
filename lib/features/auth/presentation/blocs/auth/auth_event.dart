@@ -39,3 +39,13 @@ final class AuthRegisterRequested extends AuthEvent {
 final class AuthLogoutRequested extends AuthEvent {
   const AuthLogoutRequested();
 }
+
+/// Pide enviar un correo para restablecer la contraseña (Reto 1).
+final class AuthPasswordResetRequested extends AuthEvent {
+  const AuthPasswordResetRequested(this.email);
+
+  final String email;
+
+  @override
+  List<Object?> get props => [email];
+}
