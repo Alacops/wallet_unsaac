@@ -8,6 +8,10 @@ Aplicativo de finanzas personales para Android del curso *Desarrollo de Software
 - **Sesión 2 (entregable D1):** primer **flujo BLoC completo** para los movimientos
   (carga, alta, edición, baja y limpieza) con pruebas unitarias, más los **cuatro
   retos** de la guía (edición, guardado visible, error con reintento y filtro).
+- **Sesión 3 (avance de D2):** **autenticación con Firebase** (Email/Password),
+  registro, inicio y **cierre de sesión**, sesión **persistente** gobernada por un
+  `AuthBloc` y un `AuthGate` que decide la pantalla; todo probado sin depender de
+  Firebase (repositorio falso + modo local).
 
 - **Autor:** 021501@unsaac.edu.pe
 - **Docente:** Mtro. Ing. Yover Collantes Valer
@@ -17,7 +21,7 @@ Aplicativo de finanzas personales para Android del curso *Desarrollo de Software
 
 ```
 flutter analyze   →  No issues found!
-flutter test      →  +39: All tests passed!
+flutter test      →  +58: All tests passed!
 ```
 
 ## Entorno
@@ -28,8 +32,8 @@ flutter test      →  +39: All tests passed!
 | Dart        | 3.13.4 |
 | Git         | 2.54.0 |
 
-Dependencias del flujo: `flutter_bloc`, `equatable` y `bloc_test` (esta última en
-`dev_dependencies`).
+Dependencias del flujo: `flutter_bloc`, `equatable`, `firebase_core`, `firebase_auth`
+y `bloc_test` (esta última en `dev_dependencies`).
 
 ## Puesta en marcha
 
@@ -78,6 +82,19 @@ lib/
 │   ├── config/                  # FirebaseStatus, FirebaseBootstrap
 │   ├── theme/                   # ThemeState, ThemeCubit, ThemePreferences, AppTheme
 │   └── utils/                   # MoneyFormat, formatShortDate
+├── features/auth/              # Sesión 3 — autenticación
+│   ├── domain/
+│   │   ├── entities/           # AuthUser (Equatable)
+│   │   ├── failures/           # AuthFailureReason, AuthException, AuthMessages
+│   │   └── repositories/       # AuthRepository (contrato de 5 operaciones)
+│   ├── data/
+│   │   ├── mappers/            # firebase_auth_error_mapper
+│   │   └── repositories/       # FirebaseAuthRepository, InMemoryAuthRepository
+│   └── presentation/
+│       ├── blocs/auth/         # AuthBloc, AuthEvent, AuthState
+│       ├── pages/              # AuthGate, LoginPage, RegisterPage
+│       ├── utils/              # AuthValidators
+│       └── widgets/            # AuthScaffold, AuthFormField
 └── features/wallet/
     ├── domain/
     │   ├── entities/            # Movement, WalletSummary (Equatable; cálculo del saldo)
@@ -155,16 +172,81 @@ Integrados en el mismo flujo (alimentan los criterios «Flujo BLoC» y «Pruebas
 > Los retos se trabajaron de forma acumulativa sobre `sesion-02` (comparten el
 > mismo `MovementsReady`), con un commit descriptivo por reto.
 
+## Autenticación con Firebase (Sesión 3 · avance de D2)
+
+### Habilitar el proveedor
+
+1. [Firebase Console](https://console.firebase.google.com/) → proyecto
+   `wallet-unsaac-alain` (project_number `664747208936`).
+2. **Authentication → Sign-in method → Email/Password → Habilitar**. Este flujo no
+   requiere SHA-1 ni verificación por correo.
+3. Verifica que la app Android está registrada con el `applicationId`
+   `pe.edu.unsaac.wallet_unsaac` (el mismo de `google-services.json`).
+
+Si el proveedor no está habilitado, el registro falla con `operation-not-allowed` y
+la app muestra «El acceso con correo y contraseña no está habilitado en Firebase.».
+
+### Modo local (sin Firebase)
+
+Cuando Firebase no está listo, la app usa `InMemoryAuthRepository`: una cuenta de
+demostración `estudiante@unsaac.edu.pe` / `wallet123`. **No es autenticación real**;
+las contraseñas viven en memoria solo para la demo del taller.
+
+### Flujo del `AuthBloc`
+
+**Eventos** (`auth_event.dart`): `AuthStarted` (observar la sesión),
+`AuthLoginRequested`, `AuthRegisterRequested`, `AuthLogoutRequested`.
+
+**Estados** (`auth_state.dart`): `AuthInitial`, `AuthLoading`,
+`AuthAuthenticated(user, {message})`, `AuthUnauthenticated({message})`.
+
+El `AuthGate` escucha el stream `authStateChanges()` con `emit.forEach`, de modo que
+la **sesión persiste** entre reinicios: Firebase la restaura y el gate decide entre
+la pantalla de acceso y la billetera. `AuthLoading` no desmonta el formulario
+(`buildWhen: current is! AuthLoading`).
+
+### Errores de Firebase → mensajes estables
+
+`firebase_auth_error_mapper.dart` traduce el `code` del SDK (sin prefijo `auth/`) a un
+`AuthFailureReason` y a un texto de `AuthMessages`:
+
+| Código de Firebase | Mensaje para el usuario |
+|--------------------|-------------------------|
+| `invalid-email` | El correo no tiene un formato válido. |
+| `user-not-found`, `wrong-password`, `invalid-credential` | Correo o contraseña incorrectos. |
+| `email-already-in-use` | Ya existe una cuenta con este correo. |
+| `weak-password` | La contraseña es demasiado débil. Usa al menos 6 caracteres. |
+| `operation-not-allowed` | El acceso con correo y contraseña no está habilitado en Firebase. |
+| `too-many-requests` | Demasiados intentos. Espera unos minutos y vuelve a intentarlo. |
+| `network-request-failed` | No se pudo conectar. Revisa tu conexión a Internet. |
+| (desconocido) | Ocurrió un error inesperado. Inténtalo de nuevo. |
+
+`user-not-found` y `wrong-password` comparten el mismo mensaje a propósito: no se
+enumeran cuentas (recomendación de OWASP).
+
+### Verificación de D2 parcial
+
+- [x] Registro, acceso y cierre funcionan con Firebase real o modo local.
+- [x] La sesión persiste al reiniciar la app.
+- [x] `AuthGate` muestra login o billetera según el estado.
+- [x] Los errores tienen mensajes comprensibles.
+- [x] Existen pruebas del bloc y de widget.
+- [x] `flutter analyze` y `flutter test` en verde.
+- [x] Sin contraseñas, tokens ni credenciales en el repositorio.
+
 ## Pruebas
 
-39 pruebas en `test/`:
+58 pruebas en `test/`:
 
 | Archivo | Qué verifica |
 |---------|--------------|
 | `movements_bloc_test.dart` | pruebas del bloc: estado inicial, alta, edición, baja, no-emisión, limpieza, guardado visible, filtro por tipo y caminos de error (lectura, alta, baja) |
 | `movements_state_test.dart` | 5 pruebas de igualdad por valor de entidades y estados |
 | `wallet_home_page_test.dart` | vistas de éxito, privacidad, error de carga y SnackBar de fallo de alta |
-| `balance_test.dart`*, `privacy_test.dart`, `seed_color_test.dart`, `theme_persistence_test.dart` | retos de la Sesión 1 (privacidad, color semilla, persistencia del tema) |
+| `auth/auth_bloc_test.dart` | 9 pruebas del `AuthBloc`: inicial, sesión persistida, acceso, error, registro y cierre (limpio y fallido) |
+| `auth/auth_widget_test.dart` | validación del formulario, acceso correcto abre la billetera, fallo muestra el mensaje y el registro exige confirmación |
+| `auth/auth_validators_test.dart`, `auth/auth_error_mapper_test.dart` | validaciones de correo/contraseña y traducción de códigos de Firebase |
+| `privacy_test.dart`, `seed_color_test.dart`, `theme_persistence_test.dart` | retos de la Sesión 1 (privacidad, color semilla, persistencia del tema) |
 
 \* La prueba del saldo de la Sesión 1 se reemplazó por `movements_bloc_test.dart`,
 que cubre el mismo flujo de carga y además alta, baja y limpieza.

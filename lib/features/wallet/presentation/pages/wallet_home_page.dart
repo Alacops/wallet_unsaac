@@ -4,6 +4,8 @@ import 'package:wallet_unsaac/core/config/app_profile.dart';
 import 'package:wallet_unsaac/core/config/firebase_status.dart';
 import 'package:wallet_unsaac/core/theme/theme_cubit.dart';
 import 'package:wallet_unsaac/core/theme/theme_state.dart';
+import 'package:wallet_unsaac/features/auth/presentation/blocs/auth/auth_bloc.dart';
+import 'package:wallet_unsaac/features/auth/presentation/blocs/auth/auth_event.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/movement.dart';
 import 'package:wallet_unsaac/features/wallet/domain/entities/wallet_summary.dart';
 import 'package:wallet_unsaac/features/wallet/presentation/blocs/movements/movement_filter.dart';
@@ -48,6 +50,7 @@ class WalletHomePage extends StatelessWidget {
         actions: const [
           _ClearHistoryButton(),
           _ThemeModeButton(),
+          _SignOutButton(),
           SizedBox(width: 8),
         ],
       ),
@@ -139,6 +142,45 @@ class _ThemeModeButton extends StatelessWidget {
           onPressed: () => context.read<ThemeCubit>().toggle(),
         );
       },
+    );
+  }
+}
+
+/// Botón del AppBar que cierra la sesión tras confirmar. Envía
+/// [AuthLogoutRequested]; el [AuthGate] vuelve a la pantalla de acceso.
+class _SignOutButton extends StatelessWidget {
+  const _SignOutButton();
+
+  Future<void> _confirmAndSignOut(BuildContext context) async {
+    final bloc = context.read<AuthBloc>();
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Cerrar sesión'),
+        content: const Text('¿Seguro que quieres cerrar tu sesión?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Cerrar sesión'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed ?? false) {
+      bloc.add(const AuthLogoutRequested());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: 'Cerrar sesión',
+      icon: const Icon(Icons.logout_rounded),
+      onPressed: () => _confirmAndSignOut(context),
     );
   }
 }
